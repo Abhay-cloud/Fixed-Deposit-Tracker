@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="add_fd"
+        android:enabled="true"
+        android:icon="@drawable/baseline_add_24"
+        android:shortcutShortLabel="@string/shortcut_short_label_add_fd"
+        android:shortcutLongLabel="@string/shortcut_long_label_add_fd"
+        android:shortcutDisabledMessage="@string/shortcut_disabled_message_add_fd">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="dev.abhaycloud.fdtracker"
+            android:targetClass="dev.abhaycloud.fdtracker.MainActivity">
+            <extra android:name="shortcut_id" android:value="add_fd" />
+        </intent>
+    </shortcut>
+</shortcuts>

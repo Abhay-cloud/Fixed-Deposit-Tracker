@@ -1,0 +1,292 @@
+package dev.abhaycloud.fdtracker.presentation.ui.add
+
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
+import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositDatePickerDialog
+import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositField
+import dev.abhaycloud.fdtracker.utils.DateUtils.getDifferenceBetweenDays
+import kotlinx.coroutines.launch
+import java.util.Date
+
+@Composable
+fun AddFixedDepositScreen(
+    navController: NavController,
+    fixedDeposit: FixedDeposit? = null,
+    onSaved: () -> Unit = {},
+    onBackPressed: () -> Unit = {}
+) {
+    val viewModel: AddFixedDepositViewModel = hiltViewModel()
+    val context = LocalContext.current
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        fixedDeposit?.let {
+            viewModel.setFixedDeposit(it)
+        }
+    }
+
+//    var principleAmount by rememberSaveable {
+//        mutableStateOf(fixedDeposit?.principalAmount?.toString() ?: "")
+//    }
+//    var maturityAmount by rememberSaveable {
+//        mutableStateOf(fixedDeposit?.maturityAmount?.toString() ?: "")
+//    }
+//    var annualInterestRate by rememberSaveable {
+//        mutableStateOf(fixedDeposit?.interestRate?.toString() ?: "")
+//    }
+//    var startDate by rememberSaveable {
+//        mutableStateOf(fixedDeposit?.startDate?.time?.toDateString() ?: "")
+//    }
+//    var maturityDate by rememberSaveable {
+//        mutableStateOf(fixedDeposit?.maturityDate?.time?.toDateString() ?: "")
+//    }
+//    var notes by rememberSaveable {
+//        mutableStateOf(fixedDeposit?.notes ?: "")
+//    }
+
+    var showInitialDatePicker by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var showMaturityDatePicker by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var startDateObj by rememberSaveable {
+        mutableStateOf(fixedDeposit?.startDate ?: Date())
+    }
+
+    var endDateObj by rememberSaveable {
+        mutableStateOf(fixedDeposit?.maturityDate ?: Date())
+    }
+
+    BackHandler {
+        navController.popBackStack()
+        onBackPressed()
+    }
+
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 16.dp)
+            .verticalScroll(scrollState)
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Add fixed deposit", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Bank Name",
+            value = uiState.bankName,
+            isError = uiState.bankNameError != null,
+            errorMessage = uiState.bankNameError
+        ) {
+            viewModel.onBankNameChange(it)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Principle Amount",
+            value = uiState.principleAmount,
+            isNumericField = true,
+            isError = uiState.principleAmountError != null,
+            errorMessage = uiState.principleAmountError
+        ) {
+            viewModel.onPrincipleAmountChange(it)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Maturity Amount",
+            value = uiState.maturityAmount,
+            isNumericField = true,
+            isError = uiState.maturityAmountError != null,
+            errorMessage = uiState.maturityAmountError
+        ) {
+            viewModel.onMaturityAmountChange(it)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Annual Interest",
+            value = uiState.annualInterestRate,
+            isNumericField = true,
+            isError = uiState.annualInterestRateError != null,
+            errorMessage = uiState.annualInterestRateError
+        ) {
+            viewModel.onAnnualInterestChange(it)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            FixedDepositField(
+                modifier = Modifier.weight(1f),
+                title = "Start Date",
+                value = uiState.startDate,
+                enabled = false,
+                isError = uiState.startDateError != null,
+                errorMessage = uiState.startDateError,
+                onClick = {
+                    showInitialDatePicker = true
+                }
+            ) {
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            FixedDepositField(
+                modifier = Modifier.weight(1f),
+                title = "Maturity Date",
+                value = uiState.maturityDate,
+                enabled = false,
+                isError = uiState.maturityDateError != null,
+                errorMessage = uiState.maturityDateError,
+                onClick = {
+                    showMaturityDatePicker = true
+                }
+            ) {
+
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Notes",
+            value = uiState.notes,
+            isMultipleLine = true,
+            isLastField = true,
+        ) {
+            viewModel.onNoteChange(it)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            if (fixedDeposit != null) {
+                Button(modifier = Modifier.weight(1f), onClick = {
+                    scope.launch {
+                        viewModel.deleteFixedDeposit(fixedDeposit.id)
+                        onSaved()
+                        navController.popBackStack()
+                    }
+                }) {
+                    Text(text = "Delete")
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+            Button(modifier = Modifier.weight(1f), onClick = {
+                Log.d("AddFixedDepositScreen", "Save button clicked")
+                scope.launch {
+                    if (viewModel.validateFields()) {
+                        if (fixedDeposit == null) {
+                            viewModel.addFixedDeposit(
+                                FixedDeposit(
+                                    0,
+                                    uiState.principleAmount.toDouble(),
+                                    uiState.maturityAmount.toDouble(),
+                                    endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
+                                    uiState.annualInterestRate.toDouble(),
+                                    startDateObj,
+                                    endDateObj,
+                                    Date(),
+                                    uiState.notes
+                                )
+                            )
+                        } else {
+                            viewModel.updateFixedDeposit(
+                                FixedDeposit(
+                                    fixedDeposit.id,
+                                    uiState.principleAmount.toDouble(),
+                                    uiState.maturityAmount.toDouble(),
+                                    endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
+                                    uiState.annualInterestRate.toDouble(),
+                                    startDateObj,
+                                    endDateObj,
+                                    fixedDeposit.createdAt,
+                                    uiState.notes
+                                )
+                            )
+                        }
+                        Toast.makeText(context, "Fixed deposit ${if (fixedDeposit == null) "added" else "updated"} successfully!", Toast.LENGTH_SHORT).show()
+                        onSaved()
+                        navController.popBackStack()
+                    }
+                }
+            }) {
+                Text(text = if (fixedDeposit == null) "Save" else "Update")
+            }
+        }
+    }
+
+    if (showInitialDatePicker) {
+        FixedDepositDatePickerDialog(
+            isStartDate = true,
+            onDateSelected = { dateString, date ->
+                startDateObj = date
+                showInitialDatePicker = false
+                viewModel.onStartDateChange(dateString)
+            }) {
+            showInitialDatePicker = false
+        }
+    }
+
+    if (showMaturityDatePicker) {
+        FixedDepositDatePickerDialog(
+            isStartDate = false,
+            onDateSelected = { dateString, date ->
+                endDateObj = date
+                showMaturityDatePicker = false
+                viewModel.onMaturityDateChange(dateString)
+            }) {
+            showMaturityDatePicker = false
+        }
+    }
+
+}
+
+
+//@Preview
+//@Composable
+//fun FixedDepositFieldPreview() {
+//    FixedDepositField(title = "Bank name", value = "") {
+//
+//    }
+//}
+
+//@Preview
+//@Composable
+//fun AddFixedDepositScreenPreview() {
+//    AddFixedDepositScreen()
+//}
