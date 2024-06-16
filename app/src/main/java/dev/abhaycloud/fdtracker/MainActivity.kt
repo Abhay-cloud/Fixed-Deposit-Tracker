@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -12,6 +13,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +28,7 @@ import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
 import dev.abhaycloud.fdtracker.presentation.theme.FDTrackerTheme
 import dev.abhaycloud.fdtracker.presentation.ui.FixedDepositApp
 import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositViewModel
+import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -37,7 +41,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FDTrackerTheme {
+            val viewModel: ThemeViewModel = hiltViewModel()
+            val dynamicColor by viewModel.dynamicColor.collectAsState()
+            val darkMode by viewModel.darkMode.collectAsState()
+            FDTrackerTheme(
+                darkTheme = darkMode, dynamicColor = dynamicColor
+            ) {
                 FixedDepositApp()
             }
         }
