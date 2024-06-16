@@ -12,9 +12,7 @@ import javax.inject.Inject
 
 class FixedDepositRepositoryImpl(private val dao: FixedDepositDao) : FixedDepositRepository {
     override suspend fun addFixedDeposit(fixedDeposit: FixedDeposit): Long {
-        Log.d("someapp", "Inserting fixed deposit: $fixedDeposit")
         val id = dao.insertFixedDeposit(fixedDeposit.toEntity())
-        Log.d("someapp", "Inserted fixed deposit with ID: $id")
         return id
     }
 
@@ -36,5 +34,9 @@ class FixedDepositRepositoryImpl(private val dao: FixedDepositDao) : FixedDeposi
 
     override suspend fun deleteFixedDeposit(id: Int) {
         dao.deleteFixedDeposit(id)
+    }
+
+    override suspend fun deleteAllFixedDeposits() {
+        dao.deleteAll()
     }
 }
