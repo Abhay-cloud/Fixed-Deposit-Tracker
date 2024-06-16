@@ -10,16 +10,26 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.abhaycloud.fdtracker.data.alarm.AlarmScheduler
 import dev.abhaycloud.fdtracker.data.local.database.FixedDepositDatabase
+import dev.abhaycloud.fdtracker.data.preferences.PreferencesDataSource
 import dev.abhaycloud.fdtracker.data.repository.FixedDepositRepositoryImpl
+import dev.abhaycloud.fdtracker.data.repository.PreferencesRepositoryImpl
 import dev.abhaycloud.fdtracker.domain.notification.FixedDepositNotificationManager
 import dev.abhaycloud.fdtracker.domain.repository.FixedDepositRepository
+import dev.abhaycloud.fdtracker.domain.repository.PreferencesRepository
 import dev.abhaycloud.fdtracker.domain.usecase.AddFixedDepositUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.DeleteAllFixedDepositsUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.DeleteFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetAllFixedDepositUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.GetDarkModeUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.GetDynamicColorUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalInvestedAmountUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.SetDarkModeUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.SetDynamicColorUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.UpdateFixedDepositUseCase
 import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.home.HomeScreenViewModel
+import dev.abhaycloud.fdtracker.presentation.ui.settings.SettingScreenViewModel
+import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
 import javax.inject.Singleton
 
 @Module
@@ -40,6 +50,18 @@ object FixedDepositModule {
     @Singleton
     fun providesFixedDepositRepository(appDatabase: FixedDepositDatabase): FixedDepositRepository {
         return FixedDepositRepositoryImpl(appDatabase.fixedDepositDao)
+    }
+
+    @Provides
+    @Singleton
+    fun providesPreferencesDataSource(@ApplicationContext context: Context): PreferencesDataSource {
+        return PreferencesDataSource(context)
+    }
+
+    @Provides
+    @Singleton
+    fun providesPreferencesRepository(dataSource: PreferencesDataSource): PreferencesRepository {
+        return PreferencesRepositoryImpl(dataSource)
     }
 
     @Provides
@@ -68,6 +90,12 @@ object FixedDepositModule {
 
     @Provides
     @Singleton
+    fun providesDeleteAllFixedDepositsUseCase(repository: FixedDepositRepository): DeleteAllFixedDepositsUseCase {
+        return DeleteAllFixedDepositsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
     fun providesAlarmScheduler(@ApplicationContext context: Context): AlarmScheduler {
         return AlarmScheduler(context)
     }
@@ -82,6 +110,31 @@ object FixedDepositModule {
     @Singleton
     fun providesGetTotalInvestedAmountUseCase(repository: FixedDepositRepository): GetTotalInvestedAmountUseCase {
         return GetTotalInvestedAmountUseCase(repository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesSetDynamicColorUseCase(repository: PreferencesRepository): SetDynamicColorUseCase {
+        return SetDynamicColorUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetDynamicColorUseCase(repository: PreferencesRepository): GetDynamicColorUseCase {
+        return GetDynamicColorUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesSetDarkModeUseCase(repository: PreferencesRepository): SetDarkModeUseCase {
+        return SetDarkModeUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetDarkModeUseCase(repository: PreferencesRepository): GetDarkModeUseCase {
+        return GetDarkModeUseCase(repository)
     }
 
     @Provides
@@ -106,5 +159,29 @@ object FixedDepositModule {
         getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase
     ): HomeScreenViewModel {
         return HomeScreenViewModel(getAllFixedDepositUseCase, getTotalInvestedAmountUseCase)
+    }
+
+    @Provides
+    @Singleton
+    fun providesThemeViewModel(
+        setDynamicColorUseCase: SetDynamicColorUseCase,
+        getDynamicColorUseCase: GetDynamicColorUseCase,
+        setDarkModeUseCase: SetDarkModeUseCase,
+        getDarkModeUseCase: GetDarkModeUseCase
+    ): ThemeViewModel {
+        return ThemeViewModel(
+            setDynamicColorUseCase,
+            getDynamicColorUseCase,
+            setDarkModeUseCase,
+            getDarkModeUseCase
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesSettingsViewModel(
+        deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase
+    ): SettingScreenViewModel {
+        return SettingScreenViewModel(deleteAllFixedDepositsUseCase)
     }
 }
