@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.round
 
 object DateUtils {
     private val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
@@ -14,7 +15,7 @@ object DateUtils {
     }
 
     fun Long.getDifferenceBetweenDays(date: Long): Int {
-        return ((this - date) / (1000 * 60 * 60 * 24)).toInt()
+        return round((this - date).toDouble() / (1000 * 60 * 60 * 24)).toInt()
     }
 
     infix fun Long.isBefore(date: Long): Boolean {
