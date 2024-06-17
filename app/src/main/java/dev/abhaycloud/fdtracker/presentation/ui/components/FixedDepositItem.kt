@@ -65,8 +65,8 @@ fun FixedDepositItem(
         mutableIntStateOf(0)
     }
     LaunchedEffect(key1 = fixedDeposit) {
-        completedDays = Date().time.getDifferenceBetweenDays(fixedDeposit.startDate.time)
-        remainingDays = fixedDeposit.maturityDate.time.getDifferenceBetweenDays(Date().time)
+        completedDays = System.currentTimeMillis().getDifferenceBetweenDays(fixedDeposit.startDate.time)
+        remainingDays = fixedDeposit.maturityDate.time.getDifferenceBetweenDays(System.currentTimeMillis())
     }
 
     val progress = animateFloatAsState(
@@ -119,7 +119,7 @@ fun FixedDepositItem(
 //                    sharedContentState = rememberSharedContentState(key = "bank_name_${fixedDeposit.id}"),
 //                    animatedVisibilityScope = animatedVisibilityScope
 //                ),
-                text = "SBI",
+                text = fixedDeposit.bankName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White
