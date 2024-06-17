@@ -45,10 +45,19 @@ import dev.abhaycloud.fdtracker.utils.Utils.fromJson
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FixedDepositApp() {
+fun FixedDepositApp(navigationId: String?) {
     val navController = rememberNavController()
     var hideBottomBar by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        navigationId?.let {
+            when(it) {
+                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar = !hideBottomBar
+            }
+            navController.navigate(it)
+        }
     }
 
 //    SharedTransitionLayout {

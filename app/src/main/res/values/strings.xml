@@ -3,4 +3,7 @@
     <string name="shortcut_short_label_add_fd">Add FD</string>
     <string name="shortcut_long_label_add_fd">Add new fixed deposit</string>
     <string name="shortcut_disabled_message_add_fd">Add FD</string>
+    <string name="shortcut_short_label_fd_calculator">FD Calculator</string>
+    <string name="shortcut_long_label_fd_calculator">Calculate maturity amount</string>
+    <string name="shortcut_disabled_message_fd_calculator">FD Calculator</string>
 </resources>
