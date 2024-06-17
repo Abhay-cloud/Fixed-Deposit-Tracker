@@ -23,6 +23,7 @@ import dev.abhaycloud.fdtracker.domain.usecase.GetAllFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDarkModeUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDynamicColorUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalInvestedAmountUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.GetTotalMaturityAmountUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.SetDarkModeUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.SetDynamicColorUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.UpdateFixedDepositUseCase
@@ -30,6 +31,7 @@ import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.home.HomeScreenViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.SettingScreenViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
+import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositWidgetViewModel
 import javax.inject.Singleton
 
 @Module
@@ -112,6 +114,12 @@ object FixedDepositModule {
         return GetTotalInvestedAmountUseCase(repository)
     }
 
+    @Provides
+    @Singleton
+    fun providesGetTotalMaturityAmountUseCase(repository: FixedDepositRepository): GetTotalMaturityAmountUseCase {
+        return GetTotalMaturityAmountUseCase(repository)
+    }
+
 
     @Provides
     @Singleton
@@ -184,4 +192,14 @@ object FixedDepositModule {
     ): SettingScreenViewModel {
         return SettingScreenViewModel(deleteAllFixedDepositsUseCase)
     }
+
+    @Provides
+    @Singleton
+    fun providesFixedDepositWidgetViewModel(
+        getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase,
+        getTotalMaturityAmountUseCase: GetTotalMaturityAmountUseCase
+    ): FixedDepositWidgetViewModel {
+        return FixedDepositWidgetViewModel(getTotalInvestedAmountUseCase, getTotalMaturityAmountUseCase)
+    }
+
 }

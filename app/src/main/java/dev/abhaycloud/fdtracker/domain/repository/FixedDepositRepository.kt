@@ -9,6 +9,7 @@ interface FixedDepositRepository {
     fun getAllFixedDeposits(): Flow<List<FixedDeposit>>
     suspend fun updateFixedDeposit(fixedDeposit: FixedDeposit)
     fun getTotalInvestedAmount(): Flow<Double>
+    fun getTotalMaturityAmount(): Flow<Double>
     suspend fun deleteFixedDeposit(id: Int)
 
     suspend fun deleteAllFixedDeposits()

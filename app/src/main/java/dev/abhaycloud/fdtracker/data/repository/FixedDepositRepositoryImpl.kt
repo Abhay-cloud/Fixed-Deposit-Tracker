@@ -32,6 +32,10 @@ class FixedDepositRepositoryImpl(private val dao: FixedDepositDao) : FixedDeposi
         return dao.getTotalInvestedAmount().map { amount -> amount ?: 0.0 }
     }
 
+    override fun getTotalMaturityAmount(): Flow<Double> {
+        return dao.getTotalMaturityAmount().map { amount -> amount ?: 0.0 }
+    }
+
     override suspend fun deleteFixedDeposit(id: Int) {
         dao.deleteFixedDeposit(id)
     }

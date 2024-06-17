@@ -26,6 +26,9 @@ interface FixedDepositDao {
     @Query("SELECT SUM(principalAmount) FROM fixed_deposit")
     fun getTotalInvestedAmount(): Flow<Double?>
 
+    @Query("SELECT SUM(maturityAmount) FROM fixed_deposit")
+    fun getTotalMaturityAmount(): Flow<Double?>
+
     @Query("DELETE FROM fixed_deposit WHERE id = :id")
     suspend fun deleteFixedDeposit(id: Int)
 
