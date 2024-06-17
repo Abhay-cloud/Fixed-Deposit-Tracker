@@ -8,7 +8,6 @@ import java.util.Date
 
 object Utils {
     fun Double.getFraction(completedDays: Double): Float {
-        Log.d("myapp", "$this $completedDays fraction: ${(completedDays / this)}")
         return (completedDays / this).toFloat()
     }
 
