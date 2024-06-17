@@ -207,7 +207,7 @@ class AddFixedDepositViewModel @Inject constructor(
 
         val beforeMaturityTitle = "Fixed Deposit Maturity"
         val beforeMaturityMessage =
-            "Your fixed deposit of ${fixedDeposit.principalAmount} is maturing today."
+            "Your fixed deposit of ${fixedDeposit.principalAmount} is maturing on ${fixedDeposit.maturityDate.time.toDateString()}."
         notificationManager.scheduleNotification(
             fixedDeposit.id,
             beforeMaturityTitle,
