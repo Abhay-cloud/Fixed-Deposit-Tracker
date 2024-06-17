@@ -20,6 +20,8 @@ room = "2.6.1"
 gson = "2.11.0"
 # data-store
 data-store = "1.1.1"
+# glance
+glance-version = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +56,10 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 
 # data-store
 datastore-preferences = {module = "androidx.datastore:datastore-preferences", version.ref = "data-store"}
+
+# glance
+glance = { group = "androidx.glance", name = "glance", version.ref = "glance-version" }
+glance_widget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance-version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

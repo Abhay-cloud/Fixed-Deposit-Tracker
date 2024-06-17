@@ -90,4 +90,8 @@ dependencies {
 
     // data-store
     implementation(libs.datastore.preferences)
+
+    // glance
+    implementation(libs.glance)
+    implementation(libs.glance.widget)
 }
