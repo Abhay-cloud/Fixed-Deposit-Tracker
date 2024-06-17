@@ -214,6 +214,7 @@ fun AddFixedDepositScreen(
                             viewModel.addFixedDeposit(
                                 FixedDeposit(
                                     0,
+                                    uiState.bankName,
                                     uiState.principleAmount.toDouble(),
                                     uiState.maturityAmount.toDouble(),
                                     endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
@@ -228,6 +229,7 @@ fun AddFixedDepositScreen(
                             viewModel.updateFixedDeposit(
                                 FixedDeposit(
                                     fixedDeposit.id,
+                                    uiState.bankName,
                                     uiState.principleAmount.toDouble(),
                                     uiState.maturityAmount.toDouble(),
                                     endDateObj.time.getDifferenceBetweenDays(startDateObj.time),

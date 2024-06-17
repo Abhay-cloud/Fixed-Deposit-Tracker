@@ -50,6 +50,7 @@ class AddFixedDepositViewModel @Inject constructor(
     fun setFixedDeposit(fixedDeposit: FixedDeposit) {
         _fixedDeposit.value = fixedDeposit
         _uiState.value = _uiState.value.copy(
+            bankName = fixedDeposit.bankName,
             principleAmount = fixedDeposit.principalAmount.toString(),
             maturityAmount = fixedDeposit.maturityAmount.toString(),
             annualInterestRate = fixedDeposit.interestRate.toString(),

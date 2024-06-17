@@ -8,6 +8,7 @@ import java.util.Date
 data class FixedDepositEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
+    val bankName: String,
     val principalAmount: Double,
     val maturityAmount: Double,
     val tenure: Int,

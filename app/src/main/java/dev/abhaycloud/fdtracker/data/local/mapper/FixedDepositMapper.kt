@@ -6,6 +6,7 @@ import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
 fun FixedDeposit.toEntity(): FixedDepositEntity {
     return FixedDepositEntity(
         id = this.id,
+        bankName = this.bankName,
         principalAmount = this.principalAmount,
         maturityAmount = this.maturityAmount,
         tenure = this.tenure,
@@ -20,6 +21,7 @@ fun FixedDeposit.toEntity(): FixedDepositEntity {
 fun FixedDepositEntity.toDomain(): FixedDeposit {
     return FixedDeposit(
         id = this.id,
+        bankName = this.bankName,
         principalAmount = this.principalAmount,
         maturityAmount = this.maturityAmount,
         tenure = this.tenure,
