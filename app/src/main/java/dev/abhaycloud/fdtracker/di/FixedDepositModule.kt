@@ -2,6 +2,8 @@ package dev.abhaycloud.fdtracker.di
 
 import android.app.Application
 import android.content.Context
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -31,12 +33,20 @@ import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.home.HomeScreenViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.SettingScreenViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
+import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositWidget
 import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositWidgetViewModel
+import dev.abhaycloud.fdtracker.presentation.ui.widget.UpdateWidgetHelper
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object FixedDepositModule {
+
+    @Provides
+    @Singleton
+    fun providesContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 
     @Provides
     @Singleton
@@ -150,13 +160,15 @@ object FixedDepositModule {
         addFixedDepositUseCase: AddFixedDepositUseCase,
         updateFixedDepositUseCase: UpdateFixedDepositUseCase,
         deleteFixedDepositUseCase: DeleteFixedDepositUseCase,
-        notificationManager: FixedDepositNotificationManager
+        notificationManager: FixedDepositNotificationManager,
+        updateWidgetHelper: UpdateWidgetHelper
     ): AddFixedDepositViewModel {
         return AddFixedDepositViewModel(
             addFixedDepositUseCase,
             updateFixedDepositUseCase,
             deleteFixedDepositUseCase,
-            notificationManager
+            notificationManager,
+            updateWidgetHelper
         )
     }
 
@@ -201,5 +213,13 @@ object FixedDepositModule {
     ): FixedDepositWidgetViewModel {
         return FixedDepositWidgetViewModel(getTotalInvestedAmountUseCase, getTotalMaturityAmountUseCase)
     }
+
+    @Provides
+    @Singleton
+    fun providesFixedDepositWidget(viewModel: FixedDepositWidgetViewModel): GlanceAppWidget {
+        return FixedDepositWidget(viewModel)
+    }
+
+
 
 }

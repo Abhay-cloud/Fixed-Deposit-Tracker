@@ -1,6 +1,7 @@
 package dev.abhaycloud.fdtracker.presentation.ui.add
 
 import android.util.Log
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +10,9 @@ import dev.abhaycloud.fdtracker.domain.notification.FixedDepositNotificationMana
 import dev.abhaycloud.fdtracker.domain.usecase.AddFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.DeleteFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.UpdateFixedDepositUseCase
+import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositRefreshCallback
+import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositWidgetReceiver
+import dev.abhaycloud.fdtracker.presentation.ui.widget.UpdateWidgetHelper
 import dev.abhaycloud.fdtracker.utils.DateUtils.toDateString
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +26,8 @@ class AddFixedDepositViewModel @Inject constructor(
     private val addFixedDepositUseCase: AddFixedDepositUseCase,
     private val updateFixedDepositUseCase: UpdateFixedDepositUseCase,
     private val deleteFixedDepositUseCase: DeleteFixedDepositUseCase,
-    private val notificationManager: FixedDepositNotificationManager
+    private val notificationManager: FixedDepositNotificationManager,
+    private val widgetHelper: UpdateWidgetHelper
 ) : ViewModel() {
 
     private val _fixedDeposit = MutableStateFlow<FixedDeposit?>(null)
@@ -158,6 +163,7 @@ class AddFixedDepositViewModel @Inject constructor(
                 val fdID = addFixedDepositUseCase.execute(fixedDeposit)
                 val updatedFixedDeposit = fixedDeposit.copy(id = fdID.toInt())
                 scheduleNotification(updatedFixedDeposit)
+                widgetHelper.updateWidget()
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
@@ -173,6 +179,7 @@ class AddFixedDepositViewModel @Inject constructor(
                 updateFixedDepositUseCase.execute(fixedDeposit)
                 notificationManager.cancelNotification(fixedDeposit.id)
                 scheduleNotification(fixedDeposit)
+                widgetHelper.updateWidget()
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
@@ -187,6 +194,7 @@ class AddFixedDepositViewModel @Inject constructor(
             try {
                 deleteFixedDepositUseCase.execute(fixedDepositID)
                 notificationManager.cancelNotification(fixedDepositID)
+                widgetHelper.updateWidget()
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
