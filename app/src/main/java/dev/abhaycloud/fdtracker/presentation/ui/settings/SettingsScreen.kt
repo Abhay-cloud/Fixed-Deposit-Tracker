@@ -16,13 +16,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +47,9 @@ fun SettingsScreen(
     val context = LocalContext.current
     val dynamicColor by viewModel.dynamicColor.collectAsState()
     val darkMode by viewModel.darkMode.collectAsState()
-
+    var showDeleteDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,14 +76,36 @@ fun SettingsScreen(
             })
         Spacer(modifier = Modifier.height(16.dp))
         SettingsItem(optionName = "Delete All FDs", optionIcon = Icons.Outlined.Delete) {
-            settingScreenViewModel.deleteAllFixedDeposits()
-            Toast.makeText(
-                context,
-                "All the FDs have been deleted successfully.",
-                Toast.LENGTH_SHORT
-            ).show()
+            showDeleteDialog = true
         }
     }
+
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Are you sure you want to delete all Fixed Deposits?") },
+            text = { Text("This action cannot be undone") },
+            confirmButton = {
+                TextButton(onClick = {
+                    settingScreenViewModel.deleteAllFixedDeposits()
+                    Toast.makeText(
+                        context,
+                        "All the FDs have been deleted successfully.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }) {
+                    Text("Delete it")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            },
+        )
+    }
+
 }
 
 @Composable

@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -60,6 +62,10 @@ fun AddFixedDepositScreen(
         mutableStateOf(
             false
         )
+    }
+
+    var showDeleteDialog by rememberSaveable {
+        mutableStateOf(false)
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -192,7 +198,7 @@ fun AddFixedDepositScreen(
             if (fixedDeposit != null) {
                 Button(modifier = Modifier.weight(1f), onClick = {
                     scope.launch {
-                        viewModel.deleteFixedDeposit(fixedDeposit.id)
+                        showDeleteDialog = true
                         onSaved()
                         navController.popBackStack()
                     }
@@ -275,6 +281,26 @@ fun AddFixedDepositScreen(
             }) {
             showMaturityDatePicker = false
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Are you sure you want to delete this Fixed Deposit?") },
+            text = { Text("This action cannot be undone") },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.deleteFixedDeposit(fixedDeposit!!.id)
+                }) {
+                    Text("Delete it".uppercase())
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel".uppercase())
+                }
+            },
+        )
     }
 
 }
