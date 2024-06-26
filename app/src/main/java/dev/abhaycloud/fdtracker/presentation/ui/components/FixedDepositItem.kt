@@ -67,6 +67,7 @@ fun FixedDepositItem(
     LaunchedEffect(key1 = fixedDeposit) {
         completedDays = System.currentTimeMillis().getDifferenceBetweenDays(fixedDeposit.startDate.time)
         remainingDays = fixedDeposit.maturityDate.time.getDifferenceBetweenDays(System.currentTimeMillis())
+        Log.d("myapp", "maturity: ${fixedDeposit.maturityDate.time} current: ${System.currentTimeMillis()}")
     }
 
     val progress = animateFloatAsState(
