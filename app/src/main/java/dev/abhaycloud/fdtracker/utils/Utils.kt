@@ -20,6 +20,7 @@ object Utils {
     }
 
     fun Number.toIndianFormat(includeDecimal: Boolean = false): String {
+        if (this.toDouble() == 0.0) return "0"
         val numberFormat = DecimalFormat(if (includeDecimal) "##,##,###.00" else "##,##,###")
         return numberFormat.format(this)
     }

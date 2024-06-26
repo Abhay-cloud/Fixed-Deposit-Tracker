@@ -15,7 +15,7 @@ object DateUtils {
     }
 
     fun Long.getDifferenceBetweenDays(date: Long): Int {
-        return round((this - date).toDouble() / (1000 * 60 * 60 * 24)).toInt()
+        return round((this - date).toDouble() / (1000 * 60 * 60 * 24)).toInt().takeIf { it > 0 } ?: 0
     }
 
     infix fun Long.isBefore(date: Long): Boolean {
