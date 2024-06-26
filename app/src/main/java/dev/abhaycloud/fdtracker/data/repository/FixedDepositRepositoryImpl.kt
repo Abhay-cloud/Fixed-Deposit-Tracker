@@ -1,16 +1,19 @@
 package dev.abhaycloud.fdtracker.data.repository
 
-import android.util.Log
 import dev.abhaycloud.fdtracker.data.local.dao.FixedDepositDao
 import dev.abhaycloud.fdtracker.data.local.mapper.toDomain
 import dev.abhaycloud.fdtracker.data.local.mapper.toEntity
 import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
+import dev.abhaycloud.fdtracker.domain.notification.FixedDepositNotificationManager
 import dev.abhaycloud.fdtracker.domain.repository.FixedDepositRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class FixedDepositRepositoryImpl(private val dao: FixedDepositDao) : FixedDepositRepository {
+class FixedDepositRepositoryImpl(
+    private val dao: FixedDepositDao,
+    private val notificationManager: FixedDepositNotificationManager
+) : FixedDepositRepository {
     override suspend fun addFixedDeposit(fixedDeposit: FixedDeposit): Long {
         val id = dao.insertFixedDeposit(fixedDeposit.toEntity())
         return id
@@ -41,6 +44,10 @@ class FixedDepositRepositoryImpl(private val dao: FixedDepositDao) : FixedDeposi
     }
 
     override suspend fun deleteAllFixedDeposits() {
+        val fixedDeposits = dao.getAllFixedDeposits().first()
+        fixedDeposits.forEach {
+            notificationManager.cancelNotification(it.id)
+        }
         dao.deleteAll()
     }
 }

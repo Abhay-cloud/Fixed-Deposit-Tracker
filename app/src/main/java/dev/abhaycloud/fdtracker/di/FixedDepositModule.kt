@@ -60,8 +60,8 @@ object FixedDepositModule {
 
     @Provides
     @Singleton
-    fun providesFixedDepositRepository(appDatabase: FixedDepositDatabase): FixedDepositRepository {
-        return FixedDepositRepositoryImpl(appDatabase.fixedDepositDao)
+    fun providesFixedDepositRepository(appDatabase: FixedDepositDatabase, notificationManager: FixedDepositNotificationManager): FixedDepositRepository {
+        return FixedDepositRepositoryImpl(appDatabase.fixedDepositDao, notificationManager)
     }
 
     @Provides
@@ -200,9 +200,10 @@ object FixedDepositModule {
     @Provides
     @Singleton
     fun providesSettingsViewModel(
-        deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase
+        deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase,
+        widgetHelper: UpdateWidgetHelper
     ): SettingScreenViewModel {
-        return SettingScreenViewModel(deleteAllFixedDepositsUseCase)
+        return SettingScreenViewModel(deleteAllFixedDepositsUseCase, widgetHelper)
     }
 
     @Provides
