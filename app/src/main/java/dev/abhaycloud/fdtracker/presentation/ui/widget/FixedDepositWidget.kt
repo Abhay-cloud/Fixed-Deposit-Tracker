@@ -83,9 +83,6 @@ class FixedDepositWidget(private var viewModel: FixedDepositWidgetViewModel) : G
 
 @Composable
 private fun FixedDepositGlance(investedAmount: Double, maturityAmount: Double) {
-    LaunchedEffect(key1 = Unit) {
-        Log.d("myapp", "in the fdGlance")
-    }
     Box(
         modifier = GlanceModifier.fillMaxWidth().background(Color(0xff001F3F)).padding(16.dp),
         contentAlignment = Alignment.Center
