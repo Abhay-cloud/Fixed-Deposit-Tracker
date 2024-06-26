@@ -27,6 +27,7 @@ fun FixedDepositField(
     isDecimalAllowed: Boolean = true,
     isMultipleLine: Boolean = false,
     enabled: Boolean = true,
+    readOnly: Boolean = false,
     isLastField: Boolean = false,
     errorMessage: String? = null,
     isError: Boolean = false,
@@ -37,11 +38,12 @@ fun FixedDepositField(
         Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
-            modifier = fieldModifier.clickable {
+            modifier = fieldModifier.fillMaxWidth().clickable(enabled = !readOnly) {
                 onClick()
             },
             value = value,
             enabled = enabled,
+            readOnly = readOnly,
             onValueChange = {
                 if (isNumericField) {
                     if (isDecimalAllowed) {
