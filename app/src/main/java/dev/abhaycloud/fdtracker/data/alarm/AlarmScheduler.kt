@@ -85,6 +85,7 @@ class AlarmScheduler @Inject constructor(private val context: Context) {
     }
 
     private fun cancelMaturityAlarm(fixedDepositID: Int) {
+        Log.d("myapp", "cancelMaturityAlarm: Alarm with ID $fixedDepositID is cancelled")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -97,6 +98,7 @@ class AlarmScheduler @Inject constructor(private val context: Context) {
     }
 
     private fun cancelBeforeMaturityAlarm(fixedDepositID: Int) {
+        Log.d("myapp", "cancelBeforeMaturityAlarm: Alarm with ID $fixedDepositID is cancelled")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -107,37 +109,5 @@ class AlarmScheduler @Inject constructor(private val context: Context) {
         )
         alarmManager.cancel(pendingIntent)
     }
-//    fun scheduleAlarm(fdId: Int, title: String, message: String, time: Long) {
-//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        Log.d("myapp", "scheduleAlarm: $fdId")
-//        val intent = Intent(context, AlarmReceiver::class.java).apply {
-//            putExtra("title", title)
-//            putExtra("message", message)
-//            putExtra("fdID", fdId)
-//        }
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            context,
-//            fdId,
-//            intent,
-//            PendingIntent.FLAG_IMMUTABLE
-//        )
-//        alarmManager.setExactAndAllowWhileIdle(
-//            AlarmManager.RTC_WAKEUP,
-//            time,
-//            pendingIntent
-//        )
-//    }
-//
-//    fun cancelAlarm(fdId: Int) {
-//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        val intent = Intent(context, AlarmReceiver::class.java)
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            context,
-//            fdId,
-//            intent,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
-//        alarmManager.cancel(pendingIntent)
-//    }
 
 }
