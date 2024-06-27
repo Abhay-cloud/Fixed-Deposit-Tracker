@@ -1,4 +1,4 @@
-package dev.abhaycloud.fdtracker
+package dev.abhaycloud.fdtracker.presentation.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +13,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dev.abhaycloud.fdtracker.presentation.theme.FDTrackerTheme
-import dev.abhaycloud.fdtracker.presentation.ui.FixedDepositApp
 import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
 

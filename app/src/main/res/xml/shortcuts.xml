@@ -10,7 +10,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="dev.abhaycloud.fdtracker"
-            android:targetClass="dev.abhaycloud.fdtracker.MainActivity">
+            android:targetClass="dev.abhaycloud.fdtracker.presentation.ui.MainActivity">
             <extra android:name="shortcut_id" android:value="addFixedDeposit" />
         </intent>
     </shortcut>
@@ -24,7 +24,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="dev.abhaycloud.fdtracker"
-            android:targetClass="dev.abhaycloud.fdtracker.MainActivity">
+            android:targetClass="dev.abhaycloud.fdtracker.presentation.ui.MainActivity">
             <extra android:name="shortcut_id" android:value="calculatorScreen" />
         </intent>
     </shortcut>
