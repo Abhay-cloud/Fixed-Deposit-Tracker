@@ -6,6 +6,7 @@ import dev.abhaycloud.fdtracker.data.local.mapper.toEntity
 import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
 import dev.abhaycloud.fdtracker.domain.notification.FixedDepositNotificationManager
 import dev.abhaycloud.fdtracker.domain.repository.FixedDepositRepository
+import dev.abhaycloud.fdtracker.utils.DateUtils.toDateString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -50,4 +51,31 @@ class FixedDepositRepositoryImpl(
         }
         dao.deleteAll()
     }
+
+    override suspend fun rescheduleAlarms() {
+        val fixedDeposits = dao.getAllFixedDeposits().first()
+        fixedDeposits.forEach { fixedDeposit ->
+            val title = "Fixed Deposit Maturity"
+            val message = "Your fixed deposit of ${fixedDeposit.principalAmount} is maturing today."
+            notificationManager.scheduleNotification(
+                fixedDeposit.id,
+                title,
+                message,
+                fixedDeposit.maturityDate,
+                0
+            )
+
+            val beforeMaturityTitle = "Fixed Deposit Maturity"
+            val beforeMaturityMessage =
+                "Your fixed deposit of ${fixedDeposit.principalAmount} is maturing on ${fixedDeposit.maturityDate.time.toDateString()}."
+            notificationManager.scheduleNotification(
+                fixedDeposit.id,
+                beforeMaturityTitle,
+                beforeMaturityMessage,
+                fixedDeposit.maturityDate,
+                3
+            )
+        }
+    }
+
 }

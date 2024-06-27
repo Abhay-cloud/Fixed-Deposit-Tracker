@@ -13,4 +13,6 @@ interface FixedDepositRepository {
     suspend fun deleteFixedDeposit(id: Int)
 
     suspend fun deleteAllFixedDeposits()
+
+    suspend fun rescheduleAlarms()
 }

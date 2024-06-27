@@ -26,6 +26,7 @@ import dev.abhaycloud.fdtracker.domain.usecase.GetDarkModeUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDynamicColorUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalInvestedAmountUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalMaturityAmountUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.RescheduleAlarmUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.SetDarkModeUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.SetDynamicColorUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.UpdateFixedDepositUseCase
@@ -221,6 +222,11 @@ object FixedDepositModule {
         return FixedDepositWidget(viewModel)
     }
 
+    @Provides
+    @Singleton
+    fun providesRescheduleAlarmUseCase(repository: FixedDepositRepository): RescheduleAlarmUseCase {
+        return RescheduleAlarmUseCase(repository)
+    }
 
 
 }
