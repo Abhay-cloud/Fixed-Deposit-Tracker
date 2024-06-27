@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import dev.abhaycloud.fdtracker.MainActivity
+import dev.abhaycloud.fdtracker.presentation.ui.MainActivity
 import dev.abhaycloud.fdtracker.R
 
 class NotificationHelper(private val context: Context) {
