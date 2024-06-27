@@ -89,6 +89,7 @@ fun SettingsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     settingScreenViewModel.deleteAllFixedDeposits()
+                    showDeleteDialog = false
                     Toast.makeText(
                         context,
                         "All the FDs have been deleted successfully.",
