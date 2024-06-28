@@ -21,8 +21,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +37,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import dev.abhaycloud.fdtracker.R
 import dev.abhaycloud.fdtracker.presentation.navigation.FixedDepositNavigationScreens
+import dev.abhaycloud.fdtracker.presentation.theme.primaryLight
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositItem
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositSortDropDown
 import dev.abhaycloud.fdtracker.utils.Utils.toJson
@@ -64,7 +70,7 @@ fun HomeScreen(
 
     LazyColumn(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+//            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
@@ -80,7 +86,12 @@ fun HomeScreen(
                     .padding(vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Total Investment", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "Total Investment",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xff787878)
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "₹$totalInvestedAmount",
@@ -102,23 +113,28 @@ fun HomeScreen(
             ) {
                 Text(text = "Investments", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 Box {
-                    Button(
-                        onClick = {
+                    Card(
+                        modifier = Modifier.clip(RoundedCornerShape(30.dp)).clickable {
                             isSortOptionExpanded = true
-                        },
-                        colors = ButtonDefaults.buttonColors(
+                        }, colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_sort_24),
-                            contentDescription = "sort",
+                        Row(
                             modifier = Modifier
-                                .size(width = 18.dp, height = 24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Sort", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                                .padding(horizontal = 14.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_sort_24),
+                                contentDescription = "sort",
+                                modifier = Modifier
+                                    .size(width = 18.dp, height = 24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "Sort", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                        }
                     }
                     FixedDepositSortDropDown(
                         expanded = isSortOptionExpanded,
@@ -140,7 +156,11 @@ fun HomeScreen(
         items(fixedDepositList, key = {
             it.id
         }) {
-            FixedDepositItem(modifier = Modifier.animateItemPlacement(), fixedDeposit = it, animatedVisibilityScope = animatedVisibilityScope) {
+            FixedDepositItem(
+                modifier = Modifier.animateItemPlacement(),
+                fixedDeposit = it,
+                animatedVisibilityScope = animatedVisibilityScope
+            ) {
                 navController.navigate("${FixedDepositNavigationScreens.ViewFixedDeposit.route}/${it.toJson()}")
             }
             Spacer(modifier = Modifier.height(16.dp))
