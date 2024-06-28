@@ -199,8 +199,6 @@ fun AddFixedDepositScreen(
                 Button(modifier = Modifier.weight(1f), onClick = {
                     scope.launch {
                         showDeleteDialog = true
-                        onSaved()
-                        navController.popBackStack()
                     }
                 }) {
                     Text(text = "Delete")
@@ -291,6 +289,8 @@ fun AddFixedDepositScreen(
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.deleteFixedDeposit(fixedDeposit!!.id)
+                    onSaved()
+                    navController.popBackStack()
                 }) {
                     Text("Delete it".uppercase())
                 }
