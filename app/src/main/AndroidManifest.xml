@@ -22,7 +22,7 @@
             android:name=".presentation.ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FDTracker">
+            android:theme="@style/Theme.SplashScreen.FDTracker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
