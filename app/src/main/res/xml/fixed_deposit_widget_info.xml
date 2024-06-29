@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="200dp"
-    android:minHeight="60dp"
-    android:minResizeHeight="60dp"
+    android:minHeight="100dp"
+    android:minResizeHeight="100dp"
     android:minResizeWidth="200dp"
     android:updatePeriodMillis="0"
     android:initialLayout="@layout/glance_default_loading_layout">
