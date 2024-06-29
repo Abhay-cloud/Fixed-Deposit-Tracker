@@ -22,6 +22,8 @@ gson = "2.11.0"
 data-store = "1.1.1"
 # glance
 glance-version = "1.0.0"
+# splash screen
+splash-screen-version = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +58,9 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 
 # data-store
 datastore-preferences = {module = "androidx.datastore:datastore-preferences", version.ref = "data-store"}
+
+# splash screen
+splash-screen = {module = "androidx.core:core-splashscreen", version.ref = "splash-screen-version"}
 
 # glance
 glance = { group = "androidx.glance", name = "glance", version.ref = "glance-version" }

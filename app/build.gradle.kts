@@ -91,6 +91,9 @@ dependencies {
     // data-store
     implementation(libs.datastore.preferences)
 
+    // splash-screen
+    implementation(libs.splash.screen)
+
     // glance
     implementation(libs.glance)
     implementation(libs.glance.widget)
