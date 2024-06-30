@@ -1,4 +1,4 @@
-package dev.abhaycloud.fdtracker.presentation.receiver
+package dev.abhaycloud.fdtracker.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context

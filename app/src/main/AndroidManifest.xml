@@ -37,7 +37,7 @@
 
         <receiver android:name=".data.alarm.AlarmReceiver" />
 
-        <receiver android:name=".presentation.receiver.FixedDepositBootReceiver"
+        <receiver android:name=".receiver.FixedDepositBootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
