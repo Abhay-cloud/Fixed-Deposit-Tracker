@@ -51,6 +51,7 @@ import dev.abhaycloud.fdtracker.presentation.navigation.FixedDepositNavigationSc
 import dev.abhaycloud.fdtracker.presentation.theme.primaryLight
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositItem
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositSortDropDown
+import dev.abhaycloud.fdtracker.utils.Utils.toIndianFormat
 import dev.abhaycloud.fdtracker.utils.Utils.toJson
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalSharedTransitionApi::class)
@@ -94,7 +95,7 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "₹$totalInvestedAmount",
+                    text = "₹${totalInvestedAmount.toIndianFormat(includeDecimal = true)}",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold
                 )

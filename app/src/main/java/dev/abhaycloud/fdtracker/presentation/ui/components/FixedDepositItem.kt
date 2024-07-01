@@ -48,9 +48,9 @@ import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
 import dev.abhaycloud.fdtracker.utils.DateUtils.getDifferenceBetweenDays
 import dev.abhaycloud.fdtracker.utils.DateUtils.toDateString
 import dev.abhaycloud.fdtracker.utils.Utils.getFraction
+import dev.abhaycloud.fdtracker.utils.Utils.toIndianFormat
 import java.util.Date
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FixedDepositItem(
     modifier: Modifier,
@@ -130,7 +130,7 @@ fun FixedDepositItem(
                 Column {
                     AmountItem(
                         title = "Principle Amount",
-                        value = "₹${fixedDeposit.principalAmount}"
+                        value = "₹${fixedDeposit.principalAmount.toIndianFormat(includeDecimal = true)}"
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     AmountItem(
@@ -140,7 +140,7 @@ fun FixedDepositItem(
                 }
                 Spacer(modifier = Modifier.width(32.dp))
                 Column {
-                    AmountItem(title = "Maturity Amount", value = "₹${fixedDeposit.maturityAmount}")
+                    AmountItem(title = "Maturity Amount", value = "₹${fixedDeposit.maturityAmount.toIndianFormat(includeDecimal = true)}")
                     Spacer(modifier = Modifier.height(16.dp))
                     AmountItem(
                         title = "Maturity Date",
