@@ -1,6 +1,7 @@
 package dev.abhaycloud.fdtracker.di
 
 import android.app.Application
+import android.content.ContentResolver
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -21,6 +22,7 @@ import dev.abhaycloud.fdtracker.domain.repository.PreferencesRepository
 import dev.abhaycloud.fdtracker.domain.usecase.AddFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.DeleteAllFixedDepositsUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.DeleteFixedDepositUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.ExportFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetAllFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDarkModeUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDynamicColorUseCase
@@ -37,6 +39,7 @@ import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositWidget
 import dev.abhaycloud.fdtracker.presentation.ui.widget.FixedDepositWidgetViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.widget.UpdateWidgetHelper
+import dev.abhaycloud.fdtracker.utils.FileUtils
 import javax.inject.Singleton
 
 @Module
@@ -47,6 +50,12 @@ object FixedDepositModule {
     @Singleton
     fun providesContext(@ApplicationContext context: Context): Context {
         return context
+    }
+
+    @Provides
+    @Singleton
+    fun providesContentResolver(@ApplicationContext context: Context): ContentResolver {
+        return context.contentResolver
     }
 
     @Provides
@@ -157,6 +166,12 @@ object FixedDepositModule {
     }
 
     @Provides
+    @Singleton
+    fun providesExportDepositUseCase(repository: FixedDepositRepository): ExportFixedDepositUseCase {
+        return  ExportFixedDepositUseCase(repository)
+    }
+
+    @Provides
     fun providesAddFixedDepositViewModel(
         addFixedDepositUseCase: AddFixedDepositUseCase,
         updateFixedDepositUseCase: UpdateFixedDepositUseCase,
@@ -202,9 +217,11 @@ object FixedDepositModule {
     @Singleton
     fun providesSettingsViewModel(
         deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase,
-        widgetHelper: UpdateWidgetHelper
+        widgetHelper: UpdateWidgetHelper,
+        exportFixedDepositUseCase: ExportFixedDepositUseCase,
+        fileUtils: FileUtils
     ): SettingScreenViewModel {
-        return SettingScreenViewModel(deleteAllFixedDepositsUseCase, widgetHelper)
+        return SettingScreenViewModel(deleteAllFixedDepositsUseCase, widgetHelper, exportFixedDepositUseCase, fileUtils)
     }
 
     @Provides
@@ -226,6 +243,12 @@ object FixedDepositModule {
     @Singleton
     fun providesRescheduleAlarmUseCase(repository: FixedDepositRepository): RescheduleAlarmUseCase {
         return RescheduleAlarmUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesFileUtils(contentResolver: ContentResolver): FileUtils {
+        return FileUtils(contentResolver)
     }
 
 

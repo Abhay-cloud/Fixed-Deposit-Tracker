@@ -1,5 +1,9 @@
 package dev.abhaycloud.fdtracker.presentation.ui.settings
 
+import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +28,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.abhaycloud.fdtracker.R
 
 @Composable
 fun SettingsScreen(
@@ -52,6 +58,25 @@ fun SettingsScreen(
     var showDeleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
+    val exportedFileUri by settingScreenViewModel.exportedFileUri.collectAsState()
+
+    LaunchedEffect(key1 = exportedFileUri) {
+        exportedFileUri?.let {
+            Toast.makeText(context, "Data has been exported successfully!", Toast.LENGTH_SHORT)
+                .show()
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(it, "text/csv")
+                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            try {
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(context, "Unable to open CSV file. Make sure that you have a proper CSV viewer.", Toast.LENGTH_LONG).show()
+            }
+            settingScreenViewModel.clearUri()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,6 +104,15 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(16.dp))
         SettingsItem(optionName = "Delete All FDs", optionIcon = Icons.Outlined.Delete) {
             showDeleteDialog = true
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        if (VERSION.SDK_INT >= VERSION_CODES.Q) {
+            SettingsItem(
+                optionName = "Export Data",
+                optionDrawable = R.drawable.outline_download_for_offline_24
+            ) {
+                settingScreenViewModel.exportData()
+            }
         }
     }
 
@@ -115,6 +149,7 @@ fun SettingsScreen(
 fun SettingsItem(
     optionName: String,
     optionIcon: ImageVector? = null,
+    optionDrawable: Int? = null,
     isSwitch: Boolean = false,
     switchValue: Boolean = false,
     onSwitchChanged: (Boolean) -> Unit = {},
@@ -152,11 +187,19 @@ fun SettingsItem(
                     modifier = Modifier.height(20.dp)
                 )
             } else {
-                Image(
-                    imageVector = optionIcon!!,
-                    contentDescription = "icon",
-                    modifier = Modifier.size(28.dp)
-                )
+                if (optionIcon != null) {
+                    Image(
+                        imageVector = optionIcon,
+                        contentDescription = "icon",
+                        modifier = Modifier.size(28.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = optionDrawable!!),
+                        contentDescription = "icon",
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
         }
     }
