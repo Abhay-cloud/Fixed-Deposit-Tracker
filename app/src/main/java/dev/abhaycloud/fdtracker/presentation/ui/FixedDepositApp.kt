@@ -59,7 +59,6 @@ import dev.abhaycloud.fdtracker.presentation.ui.settings.SettingsScreen
 import dev.abhaycloud.fdtracker.utils.Utils.fromJson
 
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FixedDepositApp(navigationId: String?) {
     val navController = rememberNavController()
@@ -69,8 +68,9 @@ fun FixedDepositApp(navigationId: String?) {
 
     LaunchedEffect(key1 = Unit) {
         navigationId?.let {
-            when(it) {
-                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar = !hideBottomBar
+            when (it) {
+                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar =
+                    !hideBottomBar
             }
             navController.navigate(it)
         }
@@ -80,26 +80,21 @@ fun FixedDepositApp(navigationId: String?) {
 
     }
 
-//    SharedTransitionLayout {
     Scaffold(
         floatingActionButton = {
             if (!hideBottomBar) {
-            FloatingActionButton(
-                onClick = {
-                    hideBottomBar = !hideBottomBar
-                    navController.navigate(FixedDepositNavigationScreens.AddFixedDeposit.route)
-                }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "add fd")
-            }
+                FloatingActionButton(
+                    onClick = {
+                        hideBottomBar = !hideBottomBar
+                        navController.navigate(FixedDepositNavigationScreens.AddFixedDeposit.route)
+                    }) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "add fd")
+                }
             }
         },
         bottomBar = {
             if (
                 !hideBottomBar
-//            , enter = slideInVertically() + expandVertically() + fadeIn(),
-//                exit = slideOutVertically(targetOffsetY = {
-//                    (it / 2)
-//                }) + fadeOut()
             ) {
                 BottomNavGraph(navController = navController)
             }
@@ -110,9 +105,7 @@ fun FixedDepositApp(navigationId: String?) {
         NavHost(
             navController = navController,
             startDestination = BottomNavDestinations.HomeScreen.route,
-            modifier = Modifier.padding(innerPadding),
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
+            modifier = Modifier.padding(innerPadding)
         ) {
 
             composable(BottomNavDestinations.HomeScreen.route) {
@@ -157,7 +150,6 @@ fun FixedDepositApp(navigationId: String?) {
         }
     }
 }
-//    }
 
 @Composable
 fun RequestNotificationPermission(
@@ -174,7 +166,8 @@ fun RequestNotificationPermission(
         if (isGranted) {
             onPermissionGranted()
         } else {
-            showRationale = context.shouldShowRequestPermissionRationaleCompat(Manifest.permission.POST_NOTIFICATIONS)
+            showRationale =
+                context.shouldShowRequestPermissionRationaleCompat(Manifest.permission.POST_NOTIFICATIONS)
             if (!showRationale) {
                 showSettingsDialog = true
             }
@@ -184,12 +177,17 @@ fun RequestNotificationPermission(
     LaunchedEffect(key1 = Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
-                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
                     onPermissionGranted()
                 }
+
                 context.shouldShowRequestPermissionRationaleCompat(Manifest.permission.POST_NOTIFICATIONS) -> {
                     showRationale = true
                 }
+
                 else -> {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
