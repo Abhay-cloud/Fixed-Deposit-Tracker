@@ -24,6 +24,9 @@ data-store = "1.1.1"
 glance-version = "1.0.0"
 # splash screen
 splash-screen-version = "1.0.1"
+# calendar
+calendar-version = "2.5.2"
+desugar_jdk_libs = "2.0.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,6 +68,11 @@ splash-screen = {module = "androidx.core:core-splashscreen", version.ref = "spla
 # glance
 glance = { group = "androidx.glance", name = "glance", version.ref = "glance-version" }
 glance_widget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance-version" }
+
+# calendar
+calendar = {module = "com.kizitonwose.calendar:compose", version.ref = "calendar-version"}
+
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -33,6 +33,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -97,4 +98,9 @@ dependencies {
     // glance
     implementation(libs.glance)
     implementation(libs.glance.widget)
+
+    // calendar
+    implementation(libs.calendar)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
