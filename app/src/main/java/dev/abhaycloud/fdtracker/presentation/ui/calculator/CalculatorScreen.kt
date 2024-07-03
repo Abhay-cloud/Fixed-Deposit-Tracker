@@ -1,5 +1,6 @@
 package dev.abhaycloud.fdtracker.presentation.ui.calculator
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,15 +54,15 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
                 })
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if(isSliderTabSelected) {
+        AnimatedVisibility(isSliderTabSelected) {
             FixedDepositCalculatorWithSlider(uiState = uiState, viewModel = viewModel)
         }
-        if(!isSliderTabSelected) {
+        AnimatedVisibility(!isSliderTabSelected) {
             FixedDepositCalculatorWithFields(uiState = uiState, viewModel = viewModel)
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Estimated maturity amount: ${
+            text = "Estimated maturity amount: ₹${
                 uiState.maturityAmount.toIndianFormat(
                     includeDecimal = true
                 )
@@ -75,64 +76,68 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
 
 @Composable
 fun FixedDepositCalculatorWithSlider(uiState: CalculatorUIState, viewModel: CalculatorViewModel) {
-    FixedDepositSliderItem(
-        title = "Principal Amount",
-        sliderTitle = "₹${uiState.principalAmount.toIndianFormat()}",
-        sliderValue = uiState.principalAmount.toFloat(),
-        valueRange = 1f..1000000f,
+    Column {
+        FixedDepositSliderItem(
+            title = "Principal Amount",
+            sliderTitle = "₹${uiState.principalAmount.toIndianFormat()}",
+            sliderValue = uiState.principalAmount.toFloat(),
+            valueRange = 1f..1000000f,
 //            steps = 99999
-    ) {
-        viewModel.onPrincipalAmountChange(it.toInt())
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-    FixedDepositSliderItem(
-        title = "Annual Interest Rate",
-        sliderTitle = "%.2f".format(uiState.annualInterestRate),
-        sliderValue = uiState.annualInterestRate.toFloat(),
-        valueRange = 1f..15f,
-        steps = 14
-    ) {
-        viewModel.onAnnualInterestChange(it.toDouble())
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-    FixedDepositSliderItem(
-        title = "Investment Duration",
-        sliderTitle = "${uiState.period} years",
-        sliderValue = uiState.period.toFloat(),
-        valueRange = 1f..25f,
-        steps = 24
-    ) {
-        viewModel.onYearChange(it.toInt())
+        ) {
+            viewModel.onPrincipalAmountChange(it.toInt())
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositSliderItem(
+            title = "Annual Interest Rate",
+            sliderTitle = "%.2f".format(uiState.annualInterestRate),
+            sliderValue = uiState.annualInterestRate.toFloat(),
+            valueRange = 1f..15f,
+            steps = 14
+        ) {
+            viewModel.onAnnualInterestChange(it.toDouble())
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositSliderItem(
+            title = "Investment Duration",
+            sliderTitle = "${uiState.period} years",
+            sliderValue = uiState.period.toFloat(),
+            valueRange = 1f..25f,
+            steps = 24
+        ) {
+            viewModel.onYearChange(it.toInt())
+        }
     }
 }
 
 @Composable
 fun FixedDepositCalculatorWithFields(uiState: CalculatorUIState, viewModel: CalculatorViewModel) {
-    FixedDepositField(
-        title = "Principal Amount",
-        value = uiState.principalAmount.toIndianFormat(),
-        isNumericField = true,
-        isDecimalAllowed = false
-    ) {
-        viewModel.onPrincipalAmountChange(if (it.isEmpty()) 1 else it.toInt())
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-    FixedDepositField(
-        title = "Annual Interest Rate",
-        value = "%.2f".format(uiState.annualInterestRate),
-        isNumericField = true
-    ) {
-        viewModel.onAnnualInterestChange(if (it.isEmpty()) 1.0 else it.toDouble())
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-    FixedDepositField(
-        title = "Investment Duration",
-        value = uiState.period.toString(),
-        isNumericField = true,
-        isDecimalAllowed = false,
-        isLastField = true
-    ) {
-        viewModel.onYearChange(if (it.isEmpty()) 1 else it.toInt())
+    Column {
+        FixedDepositField(
+            title = "Principal Amount",
+            value = uiState.principalAmount.toIndianFormat(),
+            isNumericField = true,
+            isDecimalAllowed = false
+        ) {
+            viewModel.onPrincipalAmountChange(if (it.isEmpty()) 1 else it.toInt())
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Annual Interest Rate",
+            value = "%.2f".format(uiState.annualInterestRate),
+            isNumericField = true
+        ) {
+            viewModel.onAnnualInterestChange(if (it.isEmpty()) 1.0 else it.toDouble())
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FixedDepositField(
+            title = "Investment Duration",
+            value = uiState.period.toString(),
+            isNumericField = true,
+            isDecimalAllowed = false,
+            isLastField = true
+        ) {
+            viewModel.onYearChange(if (it.isEmpty()) 1 else it.toInt())
+        }
     }
 }
 
