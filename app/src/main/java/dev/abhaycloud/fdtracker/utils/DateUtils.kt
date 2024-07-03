@@ -1,7 +1,9 @@
 package dev.abhaycloud.fdtracker.utils
 
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -32,6 +34,10 @@ object DateUtils {
         val date2 = Calendar.getInstance()
         date2.time = Date(date)
         return date1 > date2
+    }
+
+    fun Date.toLocalDate(): LocalDate {
+        return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDate()
     }
 
 }
