@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -43,15 +45,18 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text(text = "FD Calculator", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-            Image(
-                painter = painterResource(id = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24),
-                contentDescription = "slider",
-                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground),
-                modifier = Modifier.clickable {
+            IconButton(
+                onClick = {
                     viewModel.onTabChange(isSliderTabSelected = !isSliderTabSelected)
-                })
+                }) {
+                Icon(
+                    painter = painterResource(id = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24),
+                    contentDescription = "icon",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         AnimatedVisibility(isSliderTabSelected) {
