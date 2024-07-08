@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.dagger.hilt)
 }
 
@@ -82,9 +81,8 @@ dependencies {
     // hilt
     implementation(libs.hilt)
     implementation(libs.hilt.navigation)
-    kapt(libs.hilt.compiler)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
 
     // gson
     implementation(libs.android.gson)
