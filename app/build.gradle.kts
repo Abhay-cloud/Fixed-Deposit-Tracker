@@ -102,5 +102,8 @@ dependencies {
     // calendar
     implementation(libs.calendar)
 
+    // biometric auth
+    implementation(libs.biometric.auth)
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

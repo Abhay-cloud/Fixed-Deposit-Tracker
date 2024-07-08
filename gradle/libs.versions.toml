@@ -26,6 +26,9 @@ glance-version = "1.0.0"
 splash-screen-version = "1.0.1"
 # calendar
 calendar-version = "2.5.2"
+# biometric auth
+biometric-version = "1.1.0"
+
 desugar_jdk_libs = "2.0.4"
 
 [libraries]
@@ -71,6 +74,9 @@ glance_widget = { group = "androidx.glance", name = "glance-appwidget", version.
 
 # calendar
 calendar = {module = "com.kizitonwose.calendar:compose", version.ref = "calendar-version"}
+
+# biometric-auth
+biometric-auth = {module = "androidx.biometric:biometric", version.ref = "biometric-version"}
 
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 
