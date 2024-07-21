@@ -56,8 +56,7 @@ fun FixedDepositApp(navigationId: String?) {
     LaunchedEffect(key1 = Unit) {
         navigationId?.let {
             when (it) {
-                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar =
-                    !hideBottomBar
+                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar = !hideBottomBar
             }
             navController.navigate(it)
         }

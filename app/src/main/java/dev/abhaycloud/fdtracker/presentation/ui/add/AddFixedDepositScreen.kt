@@ -1,10 +1,8 @@
 package dev.abhaycloud.fdtracker.presentation.ui.add
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,8 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,7 +38,6 @@ import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositDatePickerDialog
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositField
 import dev.abhaycloud.fdtracker.utils.DateUtils.getDifferenceBetweenDays
-import kotlinx.coroutines.launch
 import java.util.Date
 
 @Composable
@@ -113,18 +106,6 @@ fun AddFixedDepositScreen(
     val updateAnnualInterest: (String) -> Unit = remember {
         {
             viewModel.onAnnualInterestChange(it)
-        }
-    }
-
-    val updateStartDate: (String) -> Unit = remember {
-        {
-            viewModel.onStartDateChange(it)
-        }
-    }
-
-    val updateMaturityDate: (String) -> Unit = remember {
-        {
-            viewModel.onMaturityDateChange(it)
         }
     }
 
@@ -212,9 +193,6 @@ fun AddFixedDepositScreen(
             errorMessage = uiState.bankNameError,
             onValueChanged = updateBankName
         )
-//        {
-//            viewModel.onBankNameChange(it)
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Principle Amount",
@@ -225,9 +203,6 @@ fun AddFixedDepositScreen(
             errorMessage = uiState.principleAmountError,
             onValueChanged = updatePrincipleAmount
         )
-//        {
-//            viewModel.onPrincipleAmountChange(it)
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Maturity Amount",
@@ -238,9 +213,6 @@ fun AddFixedDepositScreen(
             errorMessage = uiState.maturityAmountError,
             onValueChanged = updateMaturityAmount
         )
-//        {
-//            viewModel.onMaturityAmountChange(it)
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Annual Interest",
@@ -251,9 +223,6 @@ fun AddFixedDepositScreen(
             errorMessage = uiState.annualInterestRateError,
             onValueChanged = updateAnnualInterest
         )
-//        {
-//            viewModel.onAnnualInterestChange(it)
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             FixedDepositField(
@@ -294,9 +263,6 @@ fun AddFixedDepositScreen(
             readOnly = isMatured,
             onValueChanged = updateNotes
         )
-//        {
-//            viewModel.onNoteChange(it)
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             if (fixedDeposit != null) {
@@ -312,53 +278,7 @@ fun AddFixedDepositScreen(
                 Spacer(modifier = Modifier.width(16.dp))
             }
             if (!isMatured) {
-                Button(modifier = Modifier.weight(1f), onClick = addUpdateFD
-//                {
-//                    scope.launch {
-//                        if (viewModel.validateFields()) {
-//                            if (fixedDeposit == null) {
-//                                viewModel.addFixedDeposit(
-//                                    FixedDeposit(
-//                                        0,
-//                                        uiState.bankName,
-//                                        uiState.principleAmount.toDouble(),
-//                                        uiState.maturityAmount.toDouble(),
-//                                        endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
-//                                        uiState.annualInterestRate.toDouble(),
-//                                        startDateObj,
-//                                        endDateObj,
-//                                        Date(),
-//                                        uiState.notes
-//                                    )
-//                                )
-//                            } else {
-//                                viewModel.updateFixedDeposit(
-//                                    FixedDeposit(
-//                                        fixedDeposit.id,
-//                                        uiState.bankName,
-//                                        uiState.principleAmount.toDouble(),
-//                                        uiState.maturityAmount.toDouble(),
-//                                        endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
-//                                        uiState.annualInterestRate.toDouble(),
-//                                        startDateObj,
-//                                        endDateObj,
-//                                        fixedDeposit.createdAt,
-//                                        uiState.notes
-//                                    )
-//                                )
-//                            }
-//                            Toast.makeText(
-//                                context,
-//                                "Fixed deposit ${if (fixedDeposit == null) "added" else "updated"} successfully!",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                            onSaved()
-//                            navController.popBackStack()
-//                        }
-//                    }
-//
-//                }
-                ) {
+                Button(modifier = Modifier.weight(1f), onClick = addUpdateFD) {
                     Text(text = if (fixedDeposit == null) "Save" else "Update")
                 }
             }

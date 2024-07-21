@@ -91,14 +91,6 @@ fun FixedDepositItem(
                 )
             )
     ) {
-//        Image(
-//            imageVector = ImageVector.vectorResource(id = R.drawable.icon_fd_card),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .height(84.dp)
-//                .align(Alignment.TopEnd)
-//                .offset(y = (-24).dp)
-//        )
         ImageWrapper(
             resource = R.drawable.icon_fd_card,
             modifier = Modifier

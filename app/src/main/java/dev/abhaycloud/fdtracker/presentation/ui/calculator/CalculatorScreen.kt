@@ -65,14 +65,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
             IconButton(
                 onClick = {
                     tabChange()
-//                    viewModel.onTabChange(isSliderTabSelected = !isSliderTabSelected)
                 }) {
-//                Icon(
-//                    painter = painterResource(id = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24),
-//                    contentDescription = "icon",
-//                    tint = MaterialTheme.colorScheme.onBackground
-//                )
-                // Icon wrapper
                 IconWrapper(
                     resource = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24,
                     tint = MaterialTheme.colorScheme.onBackground
@@ -125,9 +118,6 @@ fun FixedDepositCalculatorWithSlider(uiState: CalculatorUIState, viewModel: Calc
             valueRange = 1f..1000000f,
             onValueChange = updatePrincipleAmount
         )
-//        {
-//            viewModel.onPrincipalAmountChange(it.toInt())
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositSliderItem(
             title = "Annual Interest Rate",
@@ -137,9 +127,6 @@ fun FixedDepositCalculatorWithSlider(uiState: CalculatorUIState, viewModel: Calc
             steps = 14,
             onValueChange = updateAnnualInterest
         )
-//        {
-//            viewModel.onAnnualInterestChange(it.toDouble())
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositSliderItem(
             title = "Investment Duration",
@@ -149,9 +136,6 @@ fun FixedDepositCalculatorWithSlider(uiState: CalculatorUIState, viewModel: Calc
             steps = 24,
             onValueChange = updateInvestmentDuration
         )
-//        {
-//            viewModel.onYearChange(it.toInt())
-//        }
     }
 }
 
@@ -180,9 +164,6 @@ fun FixedDepositCalculatorWithFields(uiState: CalculatorUIState, viewModel: Calc
             isDecimalAllowed = false,
             onValueChanged = updatePrincipleAmount
         )
-//        {
-//            viewModel.onPrincipalAmountChange(if (it.isEmpty()) 1 else it.toInt())
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Annual Interest Rate",
@@ -190,9 +171,6 @@ fun FixedDepositCalculatorWithFields(uiState: CalculatorUIState, viewModel: Calc
             isNumericField = true,
             onValueChanged = updateAnnualInterest
         )
-//        {
-//            viewModel.onAnnualInterestChange(if (it.isEmpty()) 1.0 else it.toDouble())
-//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Investment Duration",
@@ -202,9 +180,6 @@ fun FixedDepositCalculatorWithFields(uiState: CalculatorUIState, viewModel: Calc
             isLastField = true,
             onValueChanged = updateInvestmentDuration
         )
-//        {
-//            viewModel.onYearChange(if (it.isEmpty()) 1 else it.toInt())
-//        }
     }
 }
 
@@ -217,9 +192,6 @@ fun FixedDepositSliderItem(
     valueRange: ClosedFloatingPointRange<Float>,
     onValueChange: (Float) -> Unit
 ) {
-//    var value by rememberSaveable{
-//        mutableFloatStateOf(sliderValue)
-//    }
     val valueChange: (Float) -> Unit = remember(sliderValue) {
         {
             onValueChange.invoke(round(it))
@@ -241,11 +213,6 @@ fun FixedDepositSliderItem(
                 valueRange = valueRange,
                 steps = steps,
                 onValueChange = valueChange
-//                onValueChange = {
-////                    onValueChange.invoke(round(it))
-//                    value = round(it)
-//                    valueChange()
-//                }
             )
         }
     }

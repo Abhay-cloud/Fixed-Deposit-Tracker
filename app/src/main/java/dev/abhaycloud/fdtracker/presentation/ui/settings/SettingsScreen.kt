@@ -72,12 +72,6 @@ fun SettingsScreen(
         }
     }
 
-    val deleteFD: () -> Unit = remember {
-        {
-            showDeleteDialog = true
-        }
-    }
-
     val exportData: () -> Unit = remember {
         {
             settingScreenViewModel.exportData()
@@ -119,9 +113,6 @@ fun SettingsScreen(
             isSwitch = true,
             switchValue = darkMode,
             onSwitchChanged = darkModeChange
-//            {
-//                viewModel.setDarkMode(it)
-//            }
         )
         Spacer(modifier = Modifier.height(16.dp))
         SettingsItem(
@@ -129,9 +120,6 @@ fun SettingsScreen(
             isSwitch = true,
             switchValue = dynamicColor,
             onSwitchChanged = dynamicColorChange
-//            {
-//                viewModel.setDynamicColor(it)
-//            }
         )
         Spacer(modifier = Modifier.height(16.dp))
         SettingsItem(optionName = "Delete All FDs", optionIcon = Icons.Outlined.Delete,)
@@ -145,9 +133,6 @@ fun SettingsScreen(
                 optionDrawable = R.drawable.outline_download_for_offline_24,
                 onOptionClick = exportData
             )
-//            {
-//                settingScreenViewModel.exportData()
-//            }
         }
     }
 
@@ -230,12 +215,6 @@ fun SettingsItem(
                         colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                 } else {
-//                    Image(
-//                        painter = painterResource(id = optionDrawable!!),
-//                        contentDescription = "icon",
-//                        modifier = Modifier.size(28.dp),
-//                        colorFilter = ColorFilter.tint(color =  MaterialTheme.colorScheme.onPrimaryContainer)
-//                    )
                     ImageWrapper(
                         resource = optionDrawable!!,
                         modifier = Modifier.size(28.dp),
