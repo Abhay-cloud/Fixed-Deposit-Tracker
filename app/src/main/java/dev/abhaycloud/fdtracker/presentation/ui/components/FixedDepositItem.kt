@@ -1,9 +1,6 @@
 package dev.abhaycloud.fdtracker.presentation.ui.components
 
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -18,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
@@ -28,19 +24,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.abhaycloud.fdtracker.R
@@ -49,13 +42,11 @@ import dev.abhaycloud.fdtracker.utils.DateUtils.getDifferenceBetweenDays
 import dev.abhaycloud.fdtracker.utils.DateUtils.toDateString
 import dev.abhaycloud.fdtracker.utils.Utils.getFraction
 import dev.abhaycloud.fdtracker.utils.Utils.toIndianFormat
-import java.util.Date
 
 @Composable
 fun FixedDepositItem(
     modifier: Modifier,
     fixedDeposit: FixedDeposit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     onClick: (FixedDeposit) -> Unit
 ) {
     var completedDays by rememberSaveable {
@@ -67,20 +58,27 @@ fun FixedDepositItem(
     LaunchedEffect(key1 = fixedDeposit) {
         completedDays = System.currentTimeMillis().getDifferenceBetweenDays(fixedDeposit.startDate.time)
         remainingDays = fixedDeposit.maturityDate.time.getDifferenceBetweenDays(System.currentTimeMillis())
-        Log.d("myapp", "maturity: ${fixedDeposit.maturityDate.time} current: ${System.currentTimeMillis()}")
+        Log.d(
+            "myapp",
+            "maturity: ${fixedDeposit.maturityDate.time} current: ${System.currentTimeMillis()}"
+        )
     }
 
-    val progress = animateFloatAsState(
-        targetValue = fixedDeposit.tenure.toDouble().getFraction(completedDays.toDouble()),
+    val progress by rememberSaveable(fixedDeposit.tenure, completedDays) {
+        mutableFloatStateOf(fixedDeposit.tenure.toDouble().getFraction(completedDays.toDouble()))
+    }
+
+    val progressAnim by animateFloatAsState(
+        targetValue = progress,
         animationSpec = tween(1000),
         label = "progressAnimation"
     )
+//    val progress = fixedDeposit.tenure.toDouble().getFraction(completedDays.toDouble())
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
-//            .sharedElement(state = rememberSharedContentState(key = "card_${fixedDeposit.id}"), animatedVisibilityScope = animatedVisibilityScope)
             .clickable {
                 onClick.invoke(fixedDeposit)
             }
@@ -93,33 +91,27 @@ fun FixedDepositItem(
                 )
             )
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.icon_fd_card),
-            contentDescription = null,
+//        Image(
+//            imageVector = ImageVector.vectorResource(id = R.drawable.icon_fd_card),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .height(84.dp)
+//                .align(Alignment.TopEnd)
+//                .offset(y = (-24).dp)
+//        )
+        ImageWrapper(
+            resource = R.drawable.icon_fd_card,
             modifier = Modifier
                 .height(84.dp)
                 .align(Alignment.TopEnd)
                 .offset(y = (-24).dp)
         )
-//        Image(
-//            painter = painterResource(id = R.drawable.ellipse),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .padding(end = 10.dp)
-//                .size(100.dp)
-//                .offset(y = 20.dp)
-//                .align(Alignment.BottomEnd)
-//        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
             Text(
-//                modifier = Modifier.sharedBounds(
-//                    sharedContentState = rememberSharedContentState(key = "bank_name_${fixedDeposit.id}"),
-//                    animatedVisibilityScope = animatedVisibilityScope
-//                ),
                 text = fixedDeposit.bankName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -140,7 +132,10 @@ fun FixedDepositItem(
                 }
                 Spacer(modifier = Modifier.width(32.dp))
                 Column {
-                    AmountItem(title = "Maturity Amount", value = "₹${fixedDeposit.maturityAmount.toIndianFormat(includeDecimal = true)}")
+                    AmountItem(
+                        title = "Maturity Amount",
+                        value = "₹${fixedDeposit.maturityAmount.toIndianFormat(includeDecimal = true)}"
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     AmountItem(
                         title = "Maturity Date",
@@ -153,7 +148,7 @@ fun FixedDepositItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(7.dp),
-                progress = progress.value,
+                progress = progressAnim,
 //                progress = fixedDeposit.tenure.toDouble().getFraction(completedDays.toDouble()),
                 color = Color(0xff596420),
                 trackColor = Color.White,

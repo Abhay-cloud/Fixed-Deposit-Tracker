@@ -1,7 +1,6 @@
 package dev.abhaycloud.fdtracker.presentation.ui.settings
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.widget.Toast
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -32,12 +30,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.abhaycloud.fdtracker.R
+import dev.abhaycloud.fdtracker.presentation.ui.components.ImageWrapper
 
 @Composable
 fun SettingsScreen(
@@ -60,6 +60,30 @@ fun SettingsScreen(
     }
     val exportedFileUri by settingScreenViewModel.exportedFileUri.collectAsState()
 
+    val darkModeChange: (Boolean) -> Unit = remember(viewModel) {
+        {
+            viewModel.setDarkMode(it)
+        }
+    }
+
+    val dynamicColorChange: (Boolean) -> Unit = remember(viewModel) {
+        {
+            viewModel.setDynamicColor(it)
+        }
+    }
+
+    val deleteFD: () -> Unit = remember {
+        {
+            showDeleteDialog = true
+        }
+    }
+
+    val exportData: () -> Unit = remember {
+        {
+            settingScreenViewModel.exportData()
+        }
+    }
+
     LaunchedEffect(key1 = exportedFileUri) {
         exportedFileUri?.let {
             Toast.makeText(context, "Data has been exported successfully!", Toast.LENGTH_SHORT)
@@ -71,7 +95,11 @@ fun SettingsScreen(
             try {
                 context.startActivity(intent)
             } catch (e: Exception) {
-                Toast.makeText(context, "Unable to open CSV file. Make sure that you have a proper CSV viewer.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "Unable to open CSV file. Make sure that you have a proper CSV viewer.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             settingScreenViewModel.clearUri()
         }
@@ -90,29 +118,36 @@ fun SettingsScreen(
             optionName = "Dark Mode",
             isSwitch = true,
             switchValue = darkMode,
-            onSwitchChanged = {
-                viewModel.setDarkMode(it)
-            })
+            onSwitchChanged = darkModeChange
+//            {
+//                viewModel.setDarkMode(it)
+//            }
+        )
         Spacer(modifier = Modifier.height(16.dp))
         SettingsItem(
             optionName = "Dynamic Color",
             isSwitch = true,
             switchValue = dynamicColor,
-            onSwitchChanged = {
-                viewModel.setDynamicColor(it)
-            })
+            onSwitchChanged = dynamicColorChange
+//            {
+//                viewModel.setDynamicColor(it)
+//            }
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        SettingsItem(optionName = "Delete All FDs", optionIcon = Icons.Outlined.Delete) {
+        SettingsItem(optionName = "Delete All FDs", optionIcon = Icons.Outlined.Delete,)
+        {
             showDeleteDialog = true
         }
         Spacer(modifier = Modifier.height(16.dp))
         if (VERSION.SDK_INT >= VERSION_CODES.Q) {
             SettingsItem(
                 optionName = "Export Data",
-                optionDrawable = R.drawable.outline_download_for_offline_24
-            ) {
-                settingScreenViewModel.exportData()
-            }
+                optionDrawable = R.drawable.outline_download_for_offline_24,
+                onOptionClick = exportData
+            )
+//            {
+//                settingScreenViewModel.exportData()
+//            }
         }
     }
 
@@ -191,13 +226,20 @@ fun SettingsItem(
                     Image(
                         imageVector = optionIcon,
                         contentDescription = "icon",
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(28.dp),
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                 } else {
-                    Image(
-                        painter = painterResource(id = optionDrawable!!),
-                        contentDescription = "icon",
-                        modifier = Modifier.size(28.dp)
+//                    Image(
+//                        painter = painterResource(id = optionDrawable!!),
+//                        contentDescription = "icon",
+//                        modifier = Modifier.size(28.dp),
+//                        colorFilter = ColorFilter.tint(color =  MaterialTheme.colorScheme.onPrimaryContainer)
+//                    )
+                    ImageWrapper(
+                        resource = optionDrawable!!,
+                        modifier = Modifier.size(28.dp),
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                 }
             }

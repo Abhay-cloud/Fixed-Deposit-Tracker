@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -91,6 +92,99 @@ fun AddFixedDepositScreen(
         mutableStateOf(fixedDeposit?.maturityDate ?: Date())
     }
 
+    val updateBankName: (String) -> Unit = remember {
+        {
+            viewModel.onBankNameChange(it)
+        }
+    }
+
+    val updatePrincipleAmount: (String) -> Unit = remember {
+        {
+            viewModel.onPrincipleAmountChange(it)
+        }
+    }
+
+    val updateMaturityAmount: (String) -> Unit = remember {
+        {
+            viewModel.onMaturityAmountChange(it)
+        }
+    }
+
+    val updateAnnualInterest: (String) -> Unit = remember {
+        {
+            viewModel.onAnnualInterestChange(it)
+        }
+    }
+
+    val updateStartDate: (String) -> Unit = remember {
+        {
+            viewModel.onStartDateChange(it)
+        }
+    }
+
+    val updateMaturityDate: (String) -> Unit = remember {
+        {
+            viewModel.onMaturityDateChange(it)
+        }
+    }
+
+    val updateNotes: (String) -> Unit = remember {
+        {
+            viewModel.onNoteChange(it)
+        }
+    }
+
+    val deleteDialog: () -> Unit = remember {
+        {
+            showDeleteDialog = true
+        }
+    }
+
+    val addUpdateFD: () -> Unit = remember {
+        {
+                if (viewModel.validateFields()) {
+                    if (fixedDeposit == null) {
+                        viewModel.addFixedDeposit(
+                            FixedDeposit(
+                                0,
+                                uiState.bankName,
+                                uiState.principleAmount.toDouble(),
+                                uiState.maturityAmount.toDouble(),
+                                endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
+                                uiState.annualInterestRate.toDouble(),
+                                startDateObj,
+                                endDateObj,
+                                Date(),
+                                uiState.notes
+                            )
+                        )
+                    } else {
+                        viewModel.updateFixedDeposit(
+                            FixedDeposit(
+                                fixedDeposit.id,
+                                uiState.bankName,
+                                uiState.principleAmount.toDouble(),
+                                uiState.maturityAmount.toDouble(),
+                                endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
+                                uiState.annualInterestRate.toDouble(),
+                                startDateObj,
+                                endDateObj,
+                                fixedDeposit.createdAt,
+                                uiState.notes
+                            )
+                        )
+                    }
+                    Toast.makeText(
+                        context,
+                        "Fixed deposit ${if (fixedDeposit == null) "added" else "updated"} successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    onSaved()
+                    navController.popBackStack()
+                }
+        }
+    }
+
     BackHandler {
         navController.popBackStack()
         onBackPressed()
@@ -115,10 +209,12 @@ fun AddFixedDepositScreen(
             value = uiState.bankName,
             readOnly = isMatured,
             isError = uiState.bankNameError != null,
-            errorMessage = uiState.bankNameError
-        ) {
-            viewModel.onBankNameChange(it)
-        }
+            errorMessage = uiState.bankNameError,
+            onValueChanged = updateBankName
+        )
+//        {
+//            viewModel.onBankNameChange(it)
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Principle Amount",
@@ -126,10 +222,12 @@ fun AddFixedDepositScreen(
             readOnly = isMatured,
             isNumericField = true,
             isError = uiState.principleAmountError != null,
-            errorMessage = uiState.principleAmountError
-        ) {
-            viewModel.onPrincipleAmountChange(it)
-        }
+            errorMessage = uiState.principleAmountError,
+            onValueChanged = updatePrincipleAmount
+        )
+//        {
+//            viewModel.onPrincipleAmountChange(it)
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Maturity Amount",
@@ -137,10 +235,12 @@ fun AddFixedDepositScreen(
             isNumericField = true,
             readOnly = isMatured,
             isError = uiState.maturityAmountError != null,
-            errorMessage = uiState.maturityAmountError
-        ) {
-            viewModel.onMaturityAmountChange(it)
-        }
+            errorMessage = uiState.maturityAmountError,
+            onValueChanged = updateMaturityAmount
+        )
+//        {
+//            viewModel.onMaturityAmountChange(it)
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Annual Interest",
@@ -148,10 +248,12 @@ fun AddFixedDepositScreen(
             isNumericField = true,
             readOnly = isMatured,
             isError = uiState.annualInterestRateError != null,
-            errorMessage = uiState.annualInterestRateError
-        ) {
-            viewModel.onAnnualInterestChange(it)
-        }
+            errorMessage = uiState.annualInterestRateError,
+            onValueChanged = updateAnnualInterest
+        )
+//        {
+//            viewModel.onAnnualInterestChange(it)
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             FixedDepositField(
@@ -189,68 +291,74 @@ fun AddFixedDepositScreen(
             value = uiState.notes,
             isMultipleLine = true,
             isLastField = true,
-            readOnly = isMatured
-        ) {
-            viewModel.onNoteChange(it)
-        }
+            readOnly = isMatured,
+            onValueChanged = updateNotes
+        )
+//        {
+//            viewModel.onNoteChange(it)
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             if (fixedDeposit != null) {
-                Button(modifier = Modifier.weight(1f), onClick = {
-                    scope.launch {
-                        showDeleteDialog = true
-                    }
-                }) {
+                Button(modifier = Modifier.weight(1f), onClick = deleteDialog
+//                {
+//                    scope.launch {
+//                        showDeleteDialog = true
+//                    }
+//                }
+                ) {
                     Text(text = "Delete")
                 }
                 Spacer(modifier = Modifier.width(16.dp))
             }
             if (!isMatured) {
-                Button(modifier = Modifier.weight(1f), onClick = {
-                    scope.launch {
-                        if (viewModel.validateFields()) {
-                            if (fixedDeposit == null) {
-                                viewModel.addFixedDeposit(
-                                    FixedDeposit(
-                                        0,
-                                        uiState.bankName,
-                                        uiState.principleAmount.toDouble(),
-                                        uiState.maturityAmount.toDouble(),
-                                        endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
-                                        uiState.annualInterestRate.toDouble(),
-                                        startDateObj,
-                                        endDateObj,
-                                        Date(),
-                                        uiState.notes
-                                    )
-                                )
-                            } else {
-                                viewModel.updateFixedDeposit(
-                                    FixedDeposit(
-                                        fixedDeposit.id,
-                                        uiState.bankName,
-                                        uiState.principleAmount.toDouble(),
-                                        uiState.maturityAmount.toDouble(),
-                                        endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
-                                        uiState.annualInterestRate.toDouble(),
-                                        startDateObj,
-                                        endDateObj,
-                                        fixedDeposit.createdAt,
-                                        uiState.notes
-                                    )
-                                )
-                            }
-                            Toast.makeText(
-                                context,
-                                "Fixed deposit ${if (fixedDeposit == null) "added" else "updated"} successfully!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            onSaved()
-                            navController.popBackStack()
-                        }
-                    }
-
-                }) {
+                Button(modifier = Modifier.weight(1f), onClick = addUpdateFD
+//                {
+//                    scope.launch {
+//                        if (viewModel.validateFields()) {
+//                            if (fixedDeposit == null) {
+//                                viewModel.addFixedDeposit(
+//                                    FixedDeposit(
+//                                        0,
+//                                        uiState.bankName,
+//                                        uiState.principleAmount.toDouble(),
+//                                        uiState.maturityAmount.toDouble(),
+//                                        endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
+//                                        uiState.annualInterestRate.toDouble(),
+//                                        startDateObj,
+//                                        endDateObj,
+//                                        Date(),
+//                                        uiState.notes
+//                                    )
+//                                )
+//                            } else {
+//                                viewModel.updateFixedDeposit(
+//                                    FixedDeposit(
+//                                        fixedDeposit.id,
+//                                        uiState.bankName,
+//                                        uiState.principleAmount.toDouble(),
+//                                        uiState.maturityAmount.toDouble(),
+//                                        endDateObj.time.getDifferenceBetweenDays(startDateObj.time),
+//                                        uiState.annualInterestRate.toDouble(),
+//                                        startDateObj,
+//                                        endDateObj,
+//                                        fixedDeposit.createdAt,
+//                                        uiState.notes
+//                                    )
+//                                )
+//                            }
+//                            Toast.makeText(
+//                                context,
+//                                "Fixed deposit ${if (fixedDeposit == null) "added" else "updated"} successfully!",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                            onSaved()
+//                            navController.popBackStack()
+//                        }
+//                    }
+//
+//                }
+                ) {
                     Text(text = if (fixedDeposit == null) "Save" else "Update")
                 }
             }

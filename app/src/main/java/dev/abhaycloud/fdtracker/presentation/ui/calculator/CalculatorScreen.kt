@@ -18,8 +18,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -32,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.abhaycloud.fdtracker.R
 import dev.abhaycloud.fdtracker.presentation.ui.components.FixedDepositField
+import dev.abhaycloud.fdtracker.presentation.ui.components.IconWrapper
 import dev.abhaycloud.fdtracker.utils.Utils.toIndianFormat
 import kotlin.math.round
 
@@ -39,21 +45,36 @@ import kotlin.math.round
 fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val isSliderTabSelected by viewModel.isSliderTabSelected.collectAsState()
+    val tabChange = remember(viewModel) {
+        {
+            viewModel.onTabChange(isSliderTabSelected = !isSliderTabSelected)
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(text = "FD Calculator", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             IconButton(
                 onClick = {
-                    viewModel.onTabChange(isSliderTabSelected = !isSliderTabSelected)
+                    tabChange()
+//                    viewModel.onTabChange(isSliderTabSelected = !isSliderTabSelected)
                 }) {
-                Icon(
-                    painter = painterResource(id = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24),
-                    contentDescription = "icon",
+//                Icon(
+//                    painter = painterResource(id = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24),
+//                    contentDescription = "icon",
+//                    tint = MaterialTheme.colorScheme.onBackground
+//                )
+                // Icon wrapper
+                IconWrapper(
+                    resource = if (!isSliderTabSelected) R.drawable.outline_sliders_24 else R.drawable.outline_keyboard_24,
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -81,68 +102,109 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = hiltViewModel()) {
 
 @Composable
 fun FixedDepositCalculatorWithSlider(uiState: CalculatorUIState, viewModel: CalculatorViewModel) {
+    val updatePrincipleAmount: (Float) -> Unit = remember(viewModel) {
+        {
+            viewModel.onPrincipalAmountChange(it.toInt())
+        }
+    }
+    val updateAnnualInterest: (Float) -> Unit = remember(viewModel) {
+        {
+            viewModel.onAnnualInterestChange(it.toDouble())
+        }
+    }
+    val updateInvestmentDuration: (Float) -> Unit = remember(viewModel) {
+        {
+            viewModel.onYearChange(it.toInt())
+        }
+    }
     Column {
         FixedDepositSliderItem(
             title = "Principal Amount",
             sliderTitle = "₹${uiState.principalAmount.toIndianFormat()}",
             sliderValue = uiState.principalAmount.toFloat(),
             valueRange = 1f..1000000f,
-//            steps = 99999
-        ) {
-            viewModel.onPrincipalAmountChange(it.toInt())
-        }
+            onValueChange = updatePrincipleAmount
+        )
+//        {
+//            viewModel.onPrincipalAmountChange(it.toInt())
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositSliderItem(
             title = "Annual Interest Rate",
             sliderTitle = "%.2f".format(uiState.annualInterestRate),
             sliderValue = uiState.annualInterestRate.toFloat(),
             valueRange = 1f..15f,
-            steps = 14
-        ) {
-            viewModel.onAnnualInterestChange(it.toDouble())
-        }
+            steps = 14,
+            onValueChange = updateAnnualInterest
+        )
+//        {
+//            viewModel.onAnnualInterestChange(it.toDouble())
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositSliderItem(
             title = "Investment Duration",
             sliderTitle = "${uiState.period} years",
             sliderValue = uiState.period.toFloat(),
             valueRange = 1f..25f,
-            steps = 24
-        ) {
-            viewModel.onYearChange(it.toInt())
-        }
+            steps = 24,
+            onValueChange = updateInvestmentDuration
+        )
+//        {
+//            viewModel.onYearChange(it.toInt())
+//        }
     }
 }
 
 @Composable
 fun FixedDepositCalculatorWithFields(uiState: CalculatorUIState, viewModel: CalculatorViewModel) {
+    val updatePrincipleAmount: (String) -> Unit = remember(viewModel) {
+        {
+            viewModel.onPrincipalAmountChange(it.toInt())
+        }
+    }
+    val updateAnnualInterest: (String) -> Unit = remember(viewModel) {
+        {
+            viewModel.onAnnualInterestChange(it.toDouble())
+        }
+    }
+    val updateInvestmentDuration: (String) -> Unit = remember(viewModel) {
+        {
+            viewModel.onYearChange(it.toInt())
+        }
+    }
     Column {
         FixedDepositField(
             title = "Principal Amount",
             value = uiState.principalAmount.toIndianFormat(),
             isNumericField = true,
-            isDecimalAllowed = false
-        ) {
-            viewModel.onPrincipalAmountChange(if (it.isEmpty()) 1 else it.toInt())
-        }
+            isDecimalAllowed = false,
+            onValueChanged = updatePrincipleAmount
+        )
+//        {
+//            viewModel.onPrincipalAmountChange(if (it.isEmpty()) 1 else it.toInt())
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Annual Interest Rate",
             value = "%.2f".format(uiState.annualInterestRate),
-            isNumericField = true
-        ) {
-            viewModel.onAnnualInterestChange(if (it.isEmpty()) 1.0 else it.toDouble())
-        }
+            isNumericField = true,
+            onValueChanged = updateAnnualInterest
+        )
+//        {
+//            viewModel.onAnnualInterestChange(if (it.isEmpty()) 1.0 else it.toDouble())
+//        }
         Spacer(modifier = Modifier.height(16.dp))
         FixedDepositField(
             title = "Investment Duration",
             value = uiState.period.toString(),
             isNumericField = true,
             isDecimalAllowed = false,
-            isLastField = true
-        ) {
-            viewModel.onYearChange(if (it.isEmpty()) 1 else it.toInt())
-        }
+            isLastField = true,
+            onValueChanged = updateInvestmentDuration
+        )
+//        {
+//            viewModel.onYearChange(if (it.isEmpty()) 1 else it.toInt())
+//        }
     }
 }
 
@@ -155,6 +217,14 @@ fun FixedDepositSliderItem(
     valueRange: ClosedFloatingPointRange<Float>,
     onValueChange: (Float) -> Unit
 ) {
+//    var value by rememberSaveable{
+//        mutableFloatStateOf(sliderValue)
+//    }
+    val valueChange: (Float) -> Unit = remember(sliderValue) {
+        {
+            onValueChange.invoke(round(it))
+        }
+    }
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -170,9 +240,13 @@ fun FixedDepositSliderItem(
                 value = sliderValue,
                 valueRange = valueRange,
                 steps = steps,
-                onValueChange = {
-                    onValueChange.invoke(round(it))
-                })
+                onValueChange = valueChange
+//                onValueChange = {
+////                    onValueChange.invoke(round(it))
+//                    value = round(it)
+//                    valueChange()
+//                }
+            )
         }
     }
 }

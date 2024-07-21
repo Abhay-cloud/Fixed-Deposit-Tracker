@@ -171,58 +171,58 @@ object FixedDepositModule {
         return  ExportFixedDepositUseCase(repository)
     }
 
-    @Provides
-    fun providesAddFixedDepositViewModel(
-        addFixedDepositUseCase: AddFixedDepositUseCase,
-        updateFixedDepositUseCase: UpdateFixedDepositUseCase,
-        deleteFixedDepositUseCase: DeleteFixedDepositUseCase,
-        notificationManager: FixedDepositNotificationManager,
-        updateWidgetHelper: UpdateWidgetHelper
-    ): AddFixedDepositViewModel {
-        return AddFixedDepositViewModel(
-            addFixedDepositUseCase,
-            updateFixedDepositUseCase,
-            deleteFixedDepositUseCase,
-            notificationManager,
-            updateWidgetHelper
-        )
-    }
+//    @Provides
+//    fun providesAddFixedDepositViewModel(
+//        addFixedDepositUseCase: AddFixedDepositUseCase,
+//        updateFixedDepositUseCase: UpdateFixedDepositUseCase,
+//        deleteFixedDepositUseCase: DeleteFixedDepositUseCase,
+//        notificationManager: FixedDepositNotificationManager,
+//        updateWidgetHelper: UpdateWidgetHelper
+//    ): AddFixedDepositViewModel {
+//        return AddFixedDepositViewModel(
+//            addFixedDepositUseCase,
+//            updateFixedDepositUseCase,
+//            deleteFixedDepositUseCase,
+//            notificationManager,
+//            updateWidgetHelper
+//        )
+//    }
 
-    @Provides
-    @Singleton
-    fun providesHomeScreenViewModel(
-        getAllFixedDepositUseCase: GetAllFixedDepositUseCase,
-        getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase
-    ): HomeScreenViewModel {
-        return HomeScreenViewModel(getAllFixedDepositUseCase, getTotalInvestedAmountUseCase)
-    }
+//    @Provides
+//    @Singleton
+//    fun providesHomeScreenViewModel(
+//        getAllFixedDepositUseCase: GetAllFixedDepositUseCase,
+//        getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase
+//    ): HomeScreenViewModel {
+//        return HomeScreenViewModel(getAllFixedDepositUseCase, getTotalInvestedAmountUseCase)
+//    }
 
-    @Provides
-    @Singleton
-    fun providesThemeViewModel(
-        setDynamicColorUseCase: SetDynamicColorUseCase,
-        getDynamicColorUseCase: GetDynamicColorUseCase,
-        setDarkModeUseCase: SetDarkModeUseCase,
-        getDarkModeUseCase: GetDarkModeUseCase
-    ): ThemeViewModel {
-        return ThemeViewModel(
-            setDynamicColorUseCase,
-            getDynamicColorUseCase,
-            setDarkModeUseCase,
-            getDarkModeUseCase
-        )
-    }
+//    @Provides
+//    @Singleton
+//    fun providesThemeViewModel(
+//        setDynamicColorUseCase: SetDynamicColorUseCase,
+//        getDynamicColorUseCase: GetDynamicColorUseCase,
+//        setDarkModeUseCase: SetDarkModeUseCase,
+//        getDarkModeUseCase: GetDarkModeUseCase
+//    ): ThemeViewModel {
+//        return ThemeViewModel(
+//            setDynamicColorUseCase,
+//            getDynamicColorUseCase,
+//            setDarkModeUseCase,
+//            getDarkModeUseCase
+//        )
+//    }
 
-    @Provides
-    @Singleton
-    fun providesSettingsViewModel(
-        deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase,
-        widgetHelper: UpdateWidgetHelper,
-        exportFixedDepositUseCase: ExportFixedDepositUseCase,
-        fileUtils: FileUtils
-    ): SettingScreenViewModel {
-        return SettingScreenViewModel(deleteAllFixedDepositsUseCase, widgetHelper, exportFixedDepositUseCase, fileUtils)
-    }
+//    @Provides
+//    @Singleton
+//    fun providesSettingsViewModel(
+//        deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase,
+//        widgetHelper: UpdateWidgetHelper,
+//        exportFixedDepositUseCase: ExportFixedDepositUseCase,
+//        fileUtils: FileUtils
+//    ): SettingScreenViewModel {
+//        return SettingScreenViewModel(deleteAllFixedDepositsUseCase, widgetHelper, exportFixedDepositUseCase, fileUtils)
+//    }
 
     @Provides
     @Singleton

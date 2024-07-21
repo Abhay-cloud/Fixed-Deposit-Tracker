@@ -3,8 +3,8 @@ package dev.abhaycloud.fdtracker.domain.model
 import java.util.Date
 
 data class FixedDeposit(
-    var id: Int,
-    var bankName: String,
+    val id: Int,
+    val bankName: String,
     val principalAmount: Double,
     val maturityAmount: Double,
     val tenure: Int,

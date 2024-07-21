@@ -1,6 +1,5 @@
 package dev.abhaycloud.fdtracker.presentation.ui.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,8 +58,7 @@ import java.time.YearMonth
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
-    navController: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navController: NavController
 ) {
 
     val fixedDepositList by viewModel.getAllFixedDepositList.collectAsState()
@@ -190,8 +188,7 @@ fun HomeScreen(
         }) {
             FixedDepositItem(
                 modifier = Modifier.animateItemPlacement(),
-                fixedDeposit = it,
-                animatedVisibilityScope = animatedVisibilityScope
+                fixedDeposit = it
             ) {
                 navController.navigate("${FixedDepositNavigationScreens.ViewFixedDeposit.route}/${it.toJson()}")
             }
