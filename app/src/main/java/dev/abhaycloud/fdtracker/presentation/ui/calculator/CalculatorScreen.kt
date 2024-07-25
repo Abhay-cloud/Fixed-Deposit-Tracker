@@ -143,17 +143,17 @@ fun FixedDepositCalculatorWithSlider(uiState: CalculatorUIState, viewModel: Calc
 fun FixedDepositCalculatorWithFields(uiState: CalculatorUIState, viewModel: CalculatorViewModel) {
     val updatePrincipleAmount: (String) -> Unit = remember(viewModel) {
         {
-            viewModel.onPrincipalAmountChange(it.toInt())
+            viewModel.onPrincipalAmountChange(if (it.isEmpty()) 1 else it.toInt())
         }
     }
     val updateAnnualInterest: (String) -> Unit = remember(viewModel) {
         {
-            viewModel.onAnnualInterestChange(it.toDouble())
+            viewModel.onAnnualInterestChange(if (it.isEmpty()) 1.0 else it.toDouble())
         }
     }
     val updateInvestmentDuration: (String) -> Unit = remember(viewModel) {
         {
-            viewModel.onYearChange(it.toInt())
+            viewModel.onYearChange(if (it.isEmpty()) 1 else it.toInt())
         }
     }
     Column {
