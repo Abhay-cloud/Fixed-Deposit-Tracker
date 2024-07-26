@@ -3,15 +3,16 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Abhay-cloud/Fixed-Deposit-Tracker)
 ![GitHub issues](https://img.shields.io/github/issues/Abhay-cloud/Fixed-Deposit-Tracker)
-![GitHub forks](https://img.shields.io/github/forks/Abhay-cloud/Fixed-Deposit-Tracker)
-![GitHub stars](https://img.shields.io/github/stars/Abhay-cloud/Fixed-Deposit-Tracker)
 ![GitHub license](https://img.shields.io/github/license/Abhay-cloud/Fixed-Deposit-Tracker)
+
+![cover](https://github.com/Abhay-cloud/Fixed-Deposit-Tracker/blob/master/media/images/cover_image.png)
+Cover image created using a template from [Hotpot.ai](https://hotpot.ai/templates/google-play-feature-graphic/8)
 
 ## Sitemap
 1. [Fixed Deposit Tracker](#fixed-deposit-tracker)
     - [Description](#-description)
     - [Features](#-features)
-    - [Technologies Used](#-technologies-used)
+    - [Technologies Used](#%EF%B8%8F-technologies-used)
     - [Installation & Running](#-installation--running)
     - [Screenshots and Videos](#-screenshots-and-videos)
         - [Images](#️-images)
@@ -45,7 +46,7 @@ This app is built using **Jetpack Compose** and operates completely offline, ens
 - **Kotlin**
 - **Jetpack Compose**
 - **Compose Navigation**
-- **MVVM**
+- **MVVM Architecture**
 - **Room Database**
 - **Preferences DataStore**
 - **Hilt**
@@ -96,3 +97,8 @@ Feel free to fork the repository and submit pull requests. If you encounter any 
 
 ## 📄 License
 This project is licensed under the MIT License. For more details, see the [LICENSE](LICENSE) file.
+
+## Connect with me
+
+[![](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/abhaysing-bhosale/)
+[![](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/abhaycloud_dev)
