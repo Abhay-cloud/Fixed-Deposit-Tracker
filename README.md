@@ -3,7 +3,6 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Abhay-cloud/Fixed-Deposit-Tracker)
 ![GitHub issues](https://img.shields.io/github/issues/Abhay-cloud/Fixed-Deposit-Tracker)
-![GitHub license](https://img.shields.io/github/license/Abhay-cloud/Fixed-Deposit-Tracker)
 
 ![cover](https://github.com/Abhay-cloud/Fixed-Deposit-Tracker/blob/master/media/images/cover_image.png)
 Cover image created using a template from [Hotpot.ai](https://hotpot.ai/templates/google-play-feature-graphic/8)
