@@ -16,6 +16,10 @@ class PreferencesDataSource(private val context: Context) {
         it[PreferencesKeys.DARK_MODE] ?: false
     }
 
+    val biometricAuth: Flow<Boolean> = context.dataStore.data.map {
+        it[PreferencesKeys.BIOMETRIC_AUTH] ?: false
+    }
+
     suspend fun setDynamicColor(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DYNAMIC_COLOR] = enabled
@@ -24,6 +28,12 @@ class PreferencesDataSource(private val context: Context) {
     suspend fun setDarkMode(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_MODE] = enabled
+        }
+    }
+
+    suspend fun setBiometricAuth(enabled: Boolean){
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.BIOMETRIC_AUTH] = enabled
         }
     }
 

@@ -13,11 +13,18 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataSource: Pref
     override val dynamicColor: Flow<Boolean>
         get() = dataSource.dynamicColor
 
+    override val biometricAuth: Flow<Boolean>
+        get() = dataSource.biometricAuth
+
     override suspend fun setDarkMode(enabled: Boolean) {
         dataSource.setDarkMode(enabled)
     }
 
     override suspend fun setDynamicColor(enabled: Boolean) {
         dataSource.setDynamicColor(enabled)
+    }
+
+    override suspend fun setBiometricAuth(enabled: Boolean) {
+        dataSource.setBiometricAuth(enabled)
     }
 }

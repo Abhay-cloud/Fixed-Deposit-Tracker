@@ -2,7 +2,6 @@ package dev.abhaycloud.fdtracker.presentation.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
@@ -16,9 +15,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.abhaycloud.fdtracker.presentation.theme.FDTrackerTheme
 import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.ThemeViewModel
+import androidx.fragment.app.FragmentActivity
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,8 +27,22 @@ class MainActivity : ComponentActivity() {
         val shortcutId = intent.getStringExtra("shortcut_id")
         setContent {
             val viewModel: ThemeViewModel = hiltViewModel()
+            val biometricViewModel: BiometricViewModel = hiltViewModel()
+            val isBiometricAuthEnabled by biometricViewModel
+                .biometricAuthFlow
+                .collectAsState(initial = false)
+            val biometricAuthResult by biometricViewModel.authResult.collectAsState()
             val dynamicColor by viewModel.dynamicColor.collectAsState()
             val darkMode by viewModel.darkMode.collectAsState()
+
+            LaunchedEffect(isBiometricAuthEnabled) {
+
+                if (isBiometricAuthEnabled) {
+                    biometricViewModel.authenticate(this@MainActivity)
+                    biometricViewModel.handleBiometricAuth(biometricAuthResult, this@MainActivity)
+                }
+            }
+
             FDTrackerTheme(
                 darkTheme = darkMode, dynamicColor = dynamicColor
             ) {

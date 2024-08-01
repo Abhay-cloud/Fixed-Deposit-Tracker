@@ -3,6 +3,7 @@ package dev.abhaycloud.fdtracker.presentation.ui.settings
 import android.content.Intent
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,16 +46,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.abhaycloud.fdtracker.R
+import dev.abhaycloud.fdtracker.domain.model.biometrics.BiometricCheckResult
+import dev.abhaycloud.fdtracker.presentation.ui.BiometricViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.components.ImageWrapper
 
 @Composable
 fun SettingsScreen(
     viewModel: ThemeViewModel = hiltViewModel(),
+    biometricAuthViewModel: BiometricViewModel = hiltViewModel(),
     settingScreenViewModel: SettingScreenViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val dynamicColor by viewModel.dynamicColor.collectAsState()
     val darkMode by viewModel.darkMode.collectAsState()
+    val biometricAvailability by biometricAuthViewModel.biometricAvailability.collectAsState()
+    val biometricAuth by biometricAuthViewModel.biometricAuthFlow.collectAsState()
     var showDeleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
@@ -70,6 +76,14 @@ fun SettingsScreen(
         {
             viewModel.setDynamicColor(it)
         }
+    }
+
+    val biometricAuthChange:(Boolean) -> Unit = remember(biometricAuthViewModel){
+
+        {
+            biometricAuthViewModel.setBiometricAuth(it)
+        }
+
     }
 
     val exportData: () -> Unit = remember {
@@ -121,6 +135,15 @@ fun SettingsScreen(
             switchValue = dynamicColor,
             onSwitchChanged = dynamicColorChange
         )
+        if (biometricAvailability is BiometricCheckResult.Available){
+            Spacer(modifier = Modifier.height(16.dp))
+            SettingsItem(
+                optionName = "Biometric Authentication",
+                isSwitch = true,
+                switchValue = biometricAuth,
+                onSwitchChanged = biometricAuthChange
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         SettingsItem(optionName = "Delete All FDs", optionIcon = Icons.Outlined.Delete,)
         {
