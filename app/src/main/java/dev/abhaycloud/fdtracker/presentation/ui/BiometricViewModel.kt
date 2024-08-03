@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.abhaycloud.fdtracker.domain.model.biometrics.AuthenticationResult
+import dev.abhaycloud.fdtracker.domain.model.biometrics.BiometricAuthState
 import dev.abhaycloud.fdtracker.domain.model.biometrics.BiometricCheckResult
 import dev.abhaycloud.fdtracker.domain.usecase.biometrics.BiometricAuthUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.biometrics.BiometricAvailabilityUseCase
@@ -34,17 +35,24 @@ class BiometricViewModel @Inject constructor(
     = MutableStateFlow(BiometricCheckResult.NoneEnrolled)
     val biometricAvailability : StateFlow<BiometricCheckResult> get() = _biometricAvailability
 
-    private val _authResult = MutableStateFlow<AuthenticationResult?>(null)
-    val authResult: StateFlow<AuthenticationResult?> get() = _authResult
+    private val _hasAuthenticated = MutableStateFlow(false)
+    val hasAuthenticated :StateFlow<Boolean> get() = _hasAuthenticated
 
-    private val _biometricAuth = MutableStateFlow(false)
-    val biometricAuthFlow: StateFlow<Boolean> = _biometricAuth
+
+    private val _authResult = MutableStateFlow<AuthenticationResult>(AuthenticationResult.Uninitialized)
+    val authResult: StateFlow<AuthenticationResult> get() = _authResult
+
+    private val _biometricAuthState :MutableStateFlow<BiometricAuthState> = MutableStateFlow(BiometricAuthState.LOADING)
+    val biometricAuthState: StateFlow<BiometricAuthState> = _biometricAuthState
 
 
     init {
 
-        getBiometricAuthUseCase.execute().map {
-            _biometricAuth.value = it
+        getBiometricAuthUseCase.execute().map {isEnabled->
+            _biometricAuthState.value = if (isEnabled) BiometricAuthState.ENABLED else {
+                _hasAuthenticated.value = true
+                BiometricAuthState.DISABLED
+            }
         }.launchIn(viewModelScope)
 
 
@@ -73,7 +81,7 @@ class BiometricViewModel @Inject constructor(
     }
 
     fun handleBiometricAuth(
-        biometricAuthResult: AuthenticationResult?,
+        biometricAuthResult: AuthenticationResult,
         context: Context
     ) {
         when (biometricAuthResult) {
@@ -87,10 +95,11 @@ class BiometricViewModel @Inject constructor(
                 (context as? Activity)?.finish()
             }
             AuthenticationResult.Success -> {
+                _hasAuthenticated.value = true
                 return
                 // Success state handled in the composable rendering below
             }
-            null -> Unit
+            AuthenticationResult.Uninitialized -> Unit
         }
     }
 }

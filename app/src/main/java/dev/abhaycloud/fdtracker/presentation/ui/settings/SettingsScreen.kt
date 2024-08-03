@@ -3,7 +3,6 @@ package dev.abhaycloud.fdtracker.presentation.ui.settings
 import android.content.Intent
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,12 +39,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.abhaycloud.fdtracker.R
+import dev.abhaycloud.fdtracker.domain.model.biometrics.BiometricAuthState
 import dev.abhaycloud.fdtracker.domain.model.biometrics.BiometricCheckResult
 import dev.abhaycloud.fdtracker.presentation.ui.BiometricViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.components.ImageWrapper
@@ -60,7 +59,7 @@ fun SettingsScreen(
     val dynamicColor by viewModel.dynamicColor.collectAsState()
     val darkMode by viewModel.darkMode.collectAsState()
     val biometricAvailability by biometricAuthViewModel.biometricAvailability.collectAsState()
-    val biometricAuth by biometricAuthViewModel.biometricAuthFlow.collectAsState()
+    val biometricAuth by biometricAuthViewModel.biometricAuthState.collectAsState()
     var showDeleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
@@ -140,7 +139,7 @@ fun SettingsScreen(
             SettingsItem(
                 optionName = "Biometric Authentication",
                 isSwitch = true,
-                switchValue = biometricAuth,
+                switchValue = biometricAuth == BiometricAuthState.ENABLED,
                 onSwitchChanged = biometricAuthChange
             )
         }
