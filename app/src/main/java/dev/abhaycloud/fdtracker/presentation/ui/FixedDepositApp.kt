@@ -47,7 +47,7 @@ import dev.abhaycloud.fdtracker.utils.Utils.fromJson
 
 
 @Composable
-fun FixedDepositApp(navigationId: String?) {
+fun FixedDepositApp(navigationId: String?, hasAuthenticated: Boolean) {
     val navController = rememberNavController()
     var hideBottomBar by rememberSaveable {
         mutableStateOf(false)
@@ -56,7 +56,8 @@ fun FixedDepositApp(navigationId: String?) {
     LaunchedEffect(key1 = Unit) {
         navigationId?.let {
             when (it) {
-                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar = !hideBottomBar
+                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar =
+                    !hideBottomBar
             }
             navController.navigate(it)
         }
@@ -88,43 +89,44 @@ fun FixedDepositApp(navigationId: String?) {
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = BottomNavDestinations.HomeScreen.route,
-            modifier = Modifier.padding(innerPadding)
-        ) {
+        if (hasAuthenticated) {
+            NavHost(
+                navController = navController,
+                startDestination = BottomNavDestinations.HomeScreen.route,
+                modifier = Modifier.padding(innerPadding)
+            ) {
 
-            composable(BottomNavDestinations.HomeScreen.route) {
-                HomeScreen(navController = navController)
-            }
-            composable(BottomNavDestinations.CalculatorScreen.route) {
-                CalculatorScreen()
-            }
-            composable(BottomNavDestinations.SettingsScreen.route) {
-                SettingsScreen()
-            }
-            composable(FixedDepositNavigationScreens.AddFixedDeposit.route) {
-                AddFixedDepositScreen(navController = navController, onSaved = {
-                    hideBottomBar = !hideBottomBar
-                }) {
-                    hideBottomBar = !hideBottomBar
+                composable(BottomNavDestinations.HomeScreen.route) {
+                    HomeScreen(navController = navController)
                 }
-            }
-            composable("${FixedDepositNavigationScreens.ViewFixedDeposit.route}/{fixedDepositData}") {
-                val fixedDeposit = it.arguments?.getString("fixedDepositData")
-
-                AddFixedDepositScreen(
-                    navController = navController,
-                    fixedDeposit = fixedDeposit!!.fromJson<FixedDeposit>(),
-                    onSaved = {
+                composable(BottomNavDestinations.CalculatorScreen.route) {
+                    CalculatorScreen()
+                }
+                composable(BottomNavDestinations.SettingsScreen.route) {
+                    SettingsScreen()
+                }
+                composable(FixedDepositNavigationScreens.AddFixedDeposit.route) {
+                    AddFixedDepositScreen(navController = navController, onSaved = {
                         hideBottomBar = !hideBottomBar
                     }) {
-                    hideBottomBar = !hideBottomBar
+                        hideBottomBar = !hideBottomBar
+                    }
                 }
+                composable("${FixedDepositNavigationScreens.ViewFixedDeposit.route}/{fixedDepositData}") {
+                    val fixedDeposit = it.arguments?.getString("fixedDepositData")
 
-                LaunchedEffect(key1 = Unit) {
-                    hideBottomBar = !hideBottomBar
-                }
+                    AddFixedDepositScreen(
+                        navController = navController,
+                        fixedDeposit = fixedDeposit!!.fromJson<FixedDeposit>(),
+                        onSaved = {
+                            hideBottomBar = !hideBottomBar
+                        }) {
+                        hideBottomBar = !hideBottomBar
+                    }
+
+                    LaunchedEffect(key1 = Unit) {
+                        hideBottomBar = !hideBottomBar
+                    }
 //                ViewFixedDepositScreen(
 //                    navController = navController,
 //                    fixedDeposit = fixedDeposit!!.fromJson<FixedDeposit>(),
@@ -132,6 +134,7 @@ fun FixedDepositApp(navigationId: String?) {
 //                ) {
 //                    hideBottomBar = !hideBottomBar
 //                }
+                }
             }
         }
     }

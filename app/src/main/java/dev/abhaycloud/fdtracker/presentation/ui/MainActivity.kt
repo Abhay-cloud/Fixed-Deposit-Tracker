@@ -52,18 +52,12 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
-            biometricViewModel.handleBiometricAuth(biometricAuthResult,this)
+            biometricViewModel.handleBiometricAuth(biometricAuthResult, this)
 
-            if(hasAuthenticated){
-                FDTrackerTheme(
-                    darkTheme = darkMode, dynamicColor = dynamicColor
-                ) {
-                    FixedDepositApp(shortcutId)
-                }
-            }else{
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                    Text("Loading", color = MaterialTheme.colorScheme.onPrimary)
-                }
+            FDTrackerTheme(
+                darkTheme = darkMode, dynamicColor = dynamicColor
+            ) {
+                FixedDepositApp(shortcutId, hasAuthenticated)
             }
 
 
