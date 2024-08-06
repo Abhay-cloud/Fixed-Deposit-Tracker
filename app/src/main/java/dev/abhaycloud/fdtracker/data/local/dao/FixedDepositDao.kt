@@ -15,7 +15,7 @@ interface FixedDepositDao {
     suspend fun insertFixedDeposit(fixedDeposit: FixedDepositEntity): Long
 
     @Query("SELECT * FROM fixed_deposit WHERE id = :id")
-    suspend fun getFixedDepositById(id: Int): FixedDepositEntity?
+    fun getFixedDepositById(id: Int): Flow<FixedDepositEntity?>
 
     @Query("SELECT * FROM fixed_deposit ORDER BY createdAt DESC")
     fun getAllFixedDeposits(): Flow<List<FixedDepositEntity>>

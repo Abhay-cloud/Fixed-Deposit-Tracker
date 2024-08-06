@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FixedDepositRepository {
     suspend fun addFixedDeposit(fixedDeposit: FixedDeposit): Long
-//    suspend fun getFixedDepositById(id: Int): FixedDeposit?
+    fun getFixedDepositById(id: Int): Flow<FixedDeposit?>
     fun getAllFixedDeposits(): Flow<List<FixedDeposit>>
     suspend fun updateFixedDeposit(fixedDeposit: FixedDeposit)
     fun getTotalInvestedAmount(): Flow<Double>
