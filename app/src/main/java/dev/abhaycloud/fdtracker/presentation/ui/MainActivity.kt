@@ -32,6 +32,7 @@ class MainActivity : FragmentActivity() {
         installSplashScreen()
         actionBar?.hide()
         val shortcutId = intent.getStringExtra("shortcut_id")
+        val fdID = intent.getIntExtra("fdID", -1)
         setContent {
             val viewModel: ThemeViewModel = hiltViewModel()
             val biometricViewModel: BiometricViewModel = hiltViewModel()
@@ -57,7 +58,7 @@ class MainActivity : FragmentActivity() {
             FDTrackerTheme(
                 darkTheme = darkMode, dynamicColor = dynamicColor
             ) {
-                FixedDepositApp(shortcutId, hasAuthenticated)
+                FixedDepositApp(shortcutId, hasAuthenticated, fdID)
             }
 
 

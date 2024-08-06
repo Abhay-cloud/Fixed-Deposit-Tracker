@@ -26,6 +26,7 @@ import dev.abhaycloud.fdtracker.domain.usecase.ExportFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetAllFixedDepositUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDarkModeUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetDynamicColorUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.GetFixedDepositByIDUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalInvestedAmountUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalMaturityAmountUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.RescheduleAlarmUseCase
@@ -171,58 +172,11 @@ object FixedDepositModule {
         return  ExportFixedDepositUseCase(repository)
     }
 
-//    @Provides
-//    fun providesAddFixedDepositViewModel(
-//        addFixedDepositUseCase: AddFixedDepositUseCase,
-//        updateFixedDepositUseCase: UpdateFixedDepositUseCase,
-//        deleteFixedDepositUseCase: DeleteFixedDepositUseCase,
-//        notificationManager: FixedDepositNotificationManager,
-//        updateWidgetHelper: UpdateWidgetHelper
-//    ): AddFixedDepositViewModel {
-//        return AddFixedDepositViewModel(
-//            addFixedDepositUseCase,
-//            updateFixedDepositUseCase,
-//            deleteFixedDepositUseCase,
-//            notificationManager,
-//            updateWidgetHelper
-//        )
-//    }
-
-//    @Provides
-//    @Singleton
-//    fun providesHomeScreenViewModel(
-//        getAllFixedDepositUseCase: GetAllFixedDepositUseCase,
-//        getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase
-//    ): HomeScreenViewModel {
-//        return HomeScreenViewModel(getAllFixedDepositUseCase, getTotalInvestedAmountUseCase)
-//    }
-
-//    @Provides
-//    @Singleton
-//    fun providesThemeViewModel(
-//        setDynamicColorUseCase: SetDynamicColorUseCase,
-//        getDynamicColorUseCase: GetDynamicColorUseCase,
-//        setDarkModeUseCase: SetDarkModeUseCase,
-//        getDarkModeUseCase: GetDarkModeUseCase
-//    ): ThemeViewModel {
-//        return ThemeViewModel(
-//            setDynamicColorUseCase,
-//            getDynamicColorUseCase,
-//            setDarkModeUseCase,
-//            getDarkModeUseCase
-//        )
-//    }
-
-//    @Provides
-//    @Singleton
-//    fun providesSettingsViewModel(
-//        deleteAllFixedDepositsUseCase: DeleteAllFixedDepositsUseCase,
-//        widgetHelper: UpdateWidgetHelper,
-//        exportFixedDepositUseCase: ExportFixedDepositUseCase,
-//        fileUtils: FileUtils
-//    ): SettingScreenViewModel {
-//        return SettingScreenViewModel(deleteAllFixedDepositsUseCase, widgetHelper, exportFixedDepositUseCase, fileUtils)
-//    }
+    @Provides
+    @Singleton
+    fun providesGetFixedDepositByIDUseCase(repository: FixedDepositRepository): GetFixedDepositByIDUseCase {
+        return GetFixedDepositByIDUseCase(repository)
+    }
 
     @Provides
     @Singleton

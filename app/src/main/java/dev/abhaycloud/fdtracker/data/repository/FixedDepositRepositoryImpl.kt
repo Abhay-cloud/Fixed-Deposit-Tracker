@@ -9,6 +9,7 @@ import dev.abhaycloud.fdtracker.domain.repository.FixedDepositRepository
 import dev.abhaycloud.fdtracker.utils.DateUtils.toDateString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class FixedDepositRepositoryImpl(
@@ -20,10 +21,10 @@ class FixedDepositRepositoryImpl(
         return id
     }
 
-    //    override suspend fun getFixedDepositById(id: Int): FixedDeposit? {
-//        TODO("Not yet implemented")
-//    }
-//
+    override fun getFixedDepositById(id: Int): Flow<FixedDeposit?> {
+        return dao.getFixedDepositById(id).map { it?.toDomain() }
+    }
+
     override fun getAllFixedDeposits(): Flow<List<FixedDeposit>> {
         return dao.getAllFixedDeposits().map { entityList -> entityList.map { it.toDomain() } }
     }

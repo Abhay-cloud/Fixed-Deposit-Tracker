@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,26 +44,51 @@ import dev.abhaycloud.fdtracker.presentation.navigation.FixedDepositNavigationSc
 import dev.abhaycloud.fdtracker.presentation.ui.add.AddFixedDepositScreen
 import dev.abhaycloud.fdtracker.presentation.ui.calculator.CalculatorScreen
 import dev.abhaycloud.fdtracker.presentation.ui.home.HomeScreen
+import dev.abhaycloud.fdtracker.presentation.ui.home.HomeScreenViewModel
 import dev.abhaycloud.fdtracker.presentation.ui.settings.SettingsScreen
 import dev.abhaycloud.fdtracker.utils.Utils.fromJson
+import dev.abhaycloud.fdtracker.utils.Utils.toJson
 
 
 @Composable
-fun FixedDepositApp(navigationId: String?, hasAuthenticated: Boolean) {
+fun FixedDepositApp(
+    navigationId: String?,
+    hasAuthenticated: Boolean,
+    fdID: Int,
+    viewModel: HomeScreenViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     var hideBottomBar by rememberSaveable {
         mutableStateOf(false)
     }
+    val fixedDepositById by viewModel.fixedDepositById.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        navigationId?.let {
-            when (it) {
-                FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar =
-                    !hideBottomBar
+    LaunchedEffect(key1 = hasAuthenticated) {
+        if (hasAuthenticated) {
+            navigationId?.let {
+                when (it) {
+                    FixedDepositNavigationScreens.AddFixedDeposit.route -> hideBottomBar =
+                        !hideBottomBar
+                }
+                navController.navigate(it)
             }
-            navController.navigate(it)
         }
     }
+
+    LaunchedEffect(Unit) {
+        if (fdID != -1) {
+            viewModel.getFixedDepositById(id = fdID)
+        }
+    }
+
+    LaunchedEffect(key1 = fixedDepositById, key2 = hasAuthenticated) {
+        if (hasAuthenticated) {
+            fixedDepositById?.let {
+                navController.navigate("${FixedDepositNavigationScreens.ViewFixedDeposit.route}/${it.toJson()}")
+            }
+        }
+    }
+
 
     RequestNotificationPermission {
 
@@ -97,7 +124,7 @@ fun FixedDepositApp(navigationId: String?, hasAuthenticated: Boolean) {
             ) {
 
                 composable(BottomNavDestinations.HomeScreen.route) {
-                    HomeScreen(navController = navController)
+                    HomeScreen(navController = navController,viewModel = viewModel)
                 }
                 composable(BottomNavDestinations.CalculatorScreen.route) {
                     CalculatorScreen()

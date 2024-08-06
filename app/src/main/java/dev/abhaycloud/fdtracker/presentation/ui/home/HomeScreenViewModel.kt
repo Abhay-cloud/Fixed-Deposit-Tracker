@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.abhaycloud.fdtracker.domain.model.FixedDeposit
 import dev.abhaycloud.fdtracker.domain.usecase.GetAllFixedDepositUseCase
+import dev.abhaycloud.fdtracker.domain.usecase.GetFixedDepositByIDUseCase
 import dev.abhaycloud.fdtracker.domain.usecase.GetTotalInvestedAmountUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getAllFixedDepositUseCase: GetAllFixedDepositUseCase,
-    private val getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase
+    private val getTotalInvestedAmountUseCase: GetTotalInvestedAmountUseCase,
+    private val getFixedDepositByIDUseCase: GetFixedDepositByIDUseCase
 ) : ViewModel() {
 
     private val _sortOption = MutableStateFlow(SortingOptions.CLEAR)
@@ -29,6 +31,9 @@ class HomeScreenViewModel @Inject constructor(
 
     private val _maturityDates = MutableStateFlow<List<Date>>(emptyList())
     val maturityDates = _maturityDates.asStateFlow()
+
+    private val _fixedDepositByID: MutableStateFlow<FixedDeposit?> = MutableStateFlow(null)
+    val fixedDepositById = _fixedDepositByID.asStateFlow()
 
     val getAllFixedDepositList: StateFlow<List<FixedDeposit>> = getAllFixedDepositUseCase.execute()
         .combine(_sortOption) { list, option ->
@@ -60,4 +65,11 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun getFixedDepositById(id: Int) {
+        viewModelScope.launch {
+             getFixedDepositByIDUseCase.execute(id).collect {
+                 _fixedDepositByID.value = it
+             }
+        }
+    }
 }
